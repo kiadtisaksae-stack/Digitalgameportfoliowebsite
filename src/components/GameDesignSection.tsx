@@ -7,31 +7,31 @@ import { Assets } from '../images';
 const designs = [
   {
     id: 1,
-    title: 'Core Loop Mechanics',
+    title: 'GDD: Chronicles of the New World ',
     category: 'System Design',
     image: 'https://images.unsplash.com/photo-1721244654346-9be0c0129e36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1lJTIwbGV2ZWwlMjBkZXNpZ24lMjBibHVlcHJpbnQlMjBza2V0Y2h8ZW58MXx8fHwxNzY5Nzg3MzQ0fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Detailed analysis and flowchart of the core gameplay loop for an RPG.'
+    description: 'คิด Core GamePlay Loop, Player System,Econamy System '
   },
   {
     id: 2,
-    title: 'Level 1: The Ruins',
+    title: 'Level Design',
     category: 'Level Design',
     image: 'https://images.unsplash.com/photo-1558655146-d09347e0b7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwc2tldGNofGVufDF8fHx8MTc2OTc4NzM1MHww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Map layout and encounter design for the starting area.'
+    description: 'ออกแบบ แมพ และ การวางจุด Event ให้ interact กับ ผู้เล่นให้ มี ประสบการเล่นที่ดี'
   },
   {
     id: 3,
     title: 'Character Progression',
     category: 'Economy Design',
     image: 'https://images.unsplash.com/photo-1553484771-371af2727871?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXBlcndvcmt8ZW58MXx8fHwxNzY5Nzg3MzU1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Spreadsheets balancing XP curves and item drop rates.'
+    description: 'ออกแบบ ระบบ เนื้อเรื่อง การให้รังวัล'
   },
   {
     id: 4,
     title: 'Boss Mechanics',
     category: 'Combat Design',
     image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjBwbGFubmluZ3xlbnwxfHx8fDE3Njk3ODczNjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Phase transition logic and attack patterns for the final boss.'
+    description: 'ออกแบบ การเปลี่ยน phase ของ Boss '
   }
 ];
 
