@@ -8,24 +8,32 @@ const models = [
     id: 1,
     title: 'Character Model',
     category: '3D Character',
-    image: 'https://images.unsplash.com/photo-1636189239307-9f3a701f30a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzRCUyMGdhbWUlMjBtb2RlbCUyMGNoYXJhY3RlcnxlbnwxfHx8fDE3Njg4MTQ3MzV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Low-poly character model for mobile game',
+    image: Assets.fe,
+    description: 'Very Low-poly character model สาวชุดแต่งงาน และ Maid',
     url: 'https://sketchfab.com/'
   },
   {
     id: 2,
-    title: 'Environment Asset',
+    title: 'Tree Shader',
     category: '3D Environment',
-    image: 'https://images.unsplash.com/photo-1679322252828-d9dc50e83e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1lJTIwZW52aXJvbm1lbnQlMjBjb25jZXB0JTIwYXJ0fGVufDF8fHx8MTc2ODgxNDczNnww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: Assets.treem,
     description: 'Stylized environment props and assets',
     url: 'https://sketchfab.com/'
   },
   {
     id: 3,
-    title: 'Weapon Design',
+    title: 'Weapon Sword',
     category: '3D Props',
-    image: 'https://images.unsplash.com/photo-1707312900236-12d6fefd2bbb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1pbmclMjBzZXR1cCUyMGRhcmt8ZW58MXx8fHwxNzY4ODEyOTI4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'High-detail weapon models with PBR textures',
+    image: Assets.sw,
+    description: 'High-detail Sword models with PBR textures',
+    url: 'https://sketchfab.com/'
+  },
+  {
+    id: 4,
+    title: 'Evironment Model',
+    category: '3D Environment',
+    image: Assets.eviron,
+    description: 'Shop Fantasy Weapon',
     url: 'https://sketchfab.com/'
   },
 ];
