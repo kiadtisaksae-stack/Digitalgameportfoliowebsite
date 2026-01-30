@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Box, ExternalLink } from 'lucide-react';
-
+//  Import image
+import { Assets } from '../images';
 const models = [
   {
     id: 1,
