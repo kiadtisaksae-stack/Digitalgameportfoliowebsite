@@ -4,7 +4,7 @@ import { Gamepad2, ExternalLink } from 'lucide-react';
 
 // --- ขั้นตอนที่ 1: Import รูปภาพจาก Folder images ---
 import cyberRunnerImg from '../images/AutoReto.png';
-import fantasyQuestImg from '../images/LobbyRalay.png';
+import fantasyQuestImg from '../images/LobbyRelay.png';
 
 const games = [
   {
