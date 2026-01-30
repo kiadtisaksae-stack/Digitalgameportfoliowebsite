@@ -6,18 +6,18 @@ import { Assets } from '../images';
 const animations = [
   {
     id: 1,
-    title: 'Combat Animation Set',
+    title: 'Advacne Skeleton Maya',
     category: 'Character Animation',
-    image: 'https://images.unsplash.com/photo-1634473111040-4ab1f1e9dab0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzZCUyMGNoYXJhY3RlciUyMHJpZ2dpbmclMjBza2VsZXRvbiUyMGFuaW1hdGlvbnxlbnwxfHx8fDE3Njk3ODczNDR8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Attack, block, and dodge animations for the main hero.',
+    image: Assets.rigmy,
+    description: 'การใช้งาน เครื่องมือ Advacne Skeleton',
     videoUrl: 'https://youtu.be/4XzeA9RNhQ8?si=fAsxBkr5_j4OTwqY'
   },
   {
     id: 2,
-    title: 'Advanced Facial Rig',
+    title: 'Rigging โดย ใช้ Blender',
     category: 'Rigging',
-    image: 'https://images.unsplash.com/photo-1617396900799-f4ec2b43c7ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzZCUyMGZhY2UlMjBtZXNofGVufDF8fHx8MTc2OTc4NzM4NHww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Full facial rig with 52 blendshapes for ARKit compatibility.',
+    image: Assets.rigbd,
+    description: 'การ rig โดยใช้ blender',
     videoUrl: 'https://youtu.be/4XzeA9RNhQ8?si=fAsxBkr5_j4OTwqY'
   },
   {
