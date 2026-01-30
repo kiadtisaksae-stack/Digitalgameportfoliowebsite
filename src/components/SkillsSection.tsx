@@ -49,7 +49,7 @@ const skillCategories = [
 
 export function SkillsSection() {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
+    <section id="technical-skills" className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
