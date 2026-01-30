@@ -55,7 +55,7 @@ export function MiniGame() {
     y: 300,
     radius: 15,
     stats: {
-      atk: 10,
+      atk: 20,
       hp: 100,
       maxHp: 100,
       speedAttack: 1,
@@ -79,11 +79,11 @@ export function MiniGame() {
       y: 300,
       radius: 15,
       stats: {
-        atk: 10,
+        atk: 6,
         hp: 100,
         maxHp: 100,
         speedAttack: 1,
-        speedWalk: 3
+        speedWalk: 2
       },
       xp: 0,
       level: 1,
