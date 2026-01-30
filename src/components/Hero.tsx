@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ChevronDown, Gamepad2, PenTool, Activity, Box } from 'lucide-react';
+import { ChevronDown, Gamepad2, PenTool, Activity, Box, Code2 } from 'lucide-react';
 
 export function Hero() {
   const scrollToSection = (id: string) => {
@@ -14,6 +14,7 @@ export function Hero() {
     { id: 'game-design', label: 'Game Design', icon: PenTool, color: 'hover:bg-green-500/20 hover:border-green-500/50' },
     { id: 'animation', label: 'Animation Rigging', icon: Activity, color: 'hover:bg-pink-500/20 hover:border-pink-500/50' },
     { id: '3d-modeling', label: '3D Modeling', icon: Box, color: 'hover:bg-purple-500/20 hover:border-purple-500/50' },
+    { id: 'technical-skills', label: 'Technical Skills', icon: Code2, color: 'hover:bg-orange-500/20 hover:border-orange-500/50' },
   ];
 
   return (
@@ -23,7 +24,7 @@ export function Hero() {
         <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,12 +34,13 @@ export function Hero() {
             Game Developer
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8">
-            สร้างสรรค์ประสบการณ์เกมที่น่าประทับใจด้วยศิลปะดิจิตอลและเทคโนโลยี
+            3D Models • Game Design • Digital Art
           </p>
         </motion.div>
 
+        {/* Categories Grid - 5 Buttons */}
         <motion.div 
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
@@ -50,7 +52,7 @@ export function Hero() {
               className={`flex flex-col items-center gap-3 p-4 rounded-xl bg-gray-800/40 border border-gray-700/50 transition-all duration-300 group ${cat.color}`}
             >
               <cat.icon className="w-6 h-6 text-gray-400 group-hover:text-white transition-colors" />
-              <span className="text-sm font-medium text-gray-300 group-hover:text-white">{cat.label}</span>
+              <span className="text-xs md:text-sm font-medium text-gray-300 group-hover:text-white">{cat.label}</span>
             </button>
           ))}
         </motion.div>
