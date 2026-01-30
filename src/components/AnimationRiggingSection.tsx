@@ -1,7 +1,8 @@
 import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Bone, PlayCircle, Layers, Youtube } from 'lucide-react';
-
+// Import Assets images
+import { Assets } from '../images';
 const animations = [
   {
     id: 1,
