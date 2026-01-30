@@ -7,10 +7,9 @@ const skillCategories = [
     icon: Box,
     color: 'from-purple-500 to-pink-500',
     skills: [
-      { name: 'Blender', level: 90 },
-      { name: 'Maya', level: 85 },
-      { name: 'ZBrush', level: 75 },
-      { name: '3ds Max', level: 70 },
+      { name: 'Blender', level: 65 },
+      { name: 'Maya', level: 75 },
+      { name: 'ZBrush', level: 65 },
     ]
   },
   {
@@ -18,9 +17,9 @@ const skillCategories = [
     icon: Zap,
     color: 'from-blue-500 to-cyan-500',
     skills: [
-      { name: 'Unity', level: 95 },
-      { name: 'Unreal Engine', level: 88 },
-      { name: 'Godot', level: 65 },
+      { name: 'Unity', level: 80 },
+      { name: 'Unreal Engine', level: 25 },
+      { name: 'Godot', level: 25 },
     ]
   },
   {
@@ -28,10 +27,10 @@ const skillCategories = [
     icon: Code2,
     color: 'from-green-500 to-emerald-500',
     skills: [
-      { name: 'C#', level: 90 },
-      { name: 'C++', level: 80 },
-      { name: 'Python', level: 75 },
-      { name: 'JavaScript', level: 70 },
+      { name: 'C#', level: 65 },
+      { name: 'C++', level: 35 },
+      { name: 'Python', level: 25 },
+      { name: 'JavaScript', level: 25 },
     ]
   },
   {
@@ -39,9 +38,9 @@ const skillCategories = [
     icon: Palette,
     color: 'from-orange-500 to-red-500',
     skills: [
-      { name: 'Photoshop', level: 85 },
-      { name: 'Substance Painter', level: 80 },
-      { name: 'Illustrator', level: 75 },
+      { name: 'Photoshop', level: 50 },
+      { name: 'Substance Painter', level: 70 },
+      { name: 'Illustrator', level: 50 },
       { name: 'After Effects', level: 70 },
     ]
   },
@@ -75,7 +74,7 @@ export function SkillsSection() {
              </div>
              <div className="w-full flex justify-between text-xs text-gray-400 font-mono">
                 <span>Beginner (0%)</span>
-                <span>Intermediate (50%)</span>
+                <span>Intermediate (70%)</span>
                 <span>Advanced (100%)</span>
              </div>
           </div>
