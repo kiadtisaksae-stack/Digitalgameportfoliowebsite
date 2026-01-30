@@ -1,13 +1,18 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion'; // หรือ 'motion/react' ตามที่คุณติดตั้ง
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Gamepad2, ExternalLink } from 'lucide-react';
+
+// --- ขั้นตอนที่ 1: Import รูปภาพจาก Folder images ---
+import cyberRunnerImg from '../images/cyber-runner.jpg';
+import fantasyQuestImg from '../images/fantasy-quest.jpg';
 
 const games = [
   {
     id: 1,
     title: 'Cyber Runner',
     genre: 'Action Platformer',
-    image: 'https://images.unsplash.com/photo-1717995045693-51ca3745213b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMGdhbWUlMjBzY3JlZW5zaG90fGVufDF8fHx8MTc2ODgxMDgxMHww&ixlib=rb-4.1.0&q=80&w=1080',
+    // --- ขั้นตอนที่ 2: นำตัวแปรที่ import มาใช้แทน URL ---
+    image: cyberRunnerImg,
     description: 'Fast-paced cyberpunk platformer with stunning visuals',
     tech: ['Unity', 'C#', 'Blender']
   },
@@ -15,7 +20,7 @@ const games = [
     id: 2,
     title: 'Fantasy Quest',
     genre: 'RPG Adventure',
-    image: 'https://images.unsplash.com/photo-1679322252828-d9dc50e83e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1lJTIwZW52aXJvbm1lbnQlMjBjb25jZXB0JTIwYXJ0fGVufDF8fHx8MTc2ODgxNDczNnww&ixlib=rb-4.1.0&q=80&w=1080',
+    image: fantasyQuestImg,
     description: 'Open-world RPG with immersive storytelling',
     tech: ['Unreal Engine', 'C++', 'Maya']
   },
@@ -62,7 +67,7 @@ export function GamesSection() {
                   <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
                 </div>
                 
-                <div className="p-8 md:p-12 flex flex-col justify-center">
+                <div className="p-8 md:p-12 flex flex-col justify-col justify-center">
                   <span className="text-sm text-blue-400 font-medium mb-2">{game.genre}</span>
                   <h3 className="text-3xl md:text-4xl font-bold mb-4">{game.title}</h3>
                   <p className="text-gray-300 text-lg mb-6">{game.description}</p>
