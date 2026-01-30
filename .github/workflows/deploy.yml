@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          # ลบบรรทัด cache: 'npm' ออกแล้ว เพื่อไม่ให้มัน Error เรื่อง lock file
 
       - name: Install
         run: npm install
