@@ -7,17 +7,25 @@ import { Assets } from '../images';
 const games = [
   {
     id: 1,
-    title: 'Cyber Runner',
-    genre: 'Action Platformer',
-    image: 'https://images.unsplash.com/photo-1717995045693-51ca3745213b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx2aWRlbyUyMGdhbWUlMjBzY3JlZW5zaG90fGVufDF8fHx8MTc2ODgxMDgxMHww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Fast-paced cyberpunk platformer with stunning visuals',
-    tech: ['Unity', 'C#', 'Blender']
+    title: 'Chronicles of the New World',
+    genre: 'RPG RolePlay',
+    image: Assets.CNW,
+    description: 'เกมที่ผมพยายามออกแบบ มาให้ผู้เล่นสามารถเลือก อาชีพ และ การเติบโตได้แบบอิสระ มีระบบ ที่แข็งแรง ที่สุด ที่เคยเขียนมา',
+    tech: ['Unity', 'C#']
   },
   {
     id: 2,
     title: 'Fantasy Quest',
     genre: 'RPG Adventure',
     image: 'https://images.unsplash.com/photo-1679322252828-d9dc50e83e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1lJTIwZW52aXJvbm1lbnQlMjBjb25jZXB0JTIwYXJ0fGVufDF8fHx8MTc2ODgxNDczNnww&ixlib=rb-4.1.0&q=80&w=1080',
+    description: 'Open-world RPG with immersive storytelling',
+    tech: ['Unreal Engine', 'C++', 'Maya']
+  },
+  {
+    id: 3,
+    title: 'Try not to get eat',
+    genre: 'Suvival Roglkie',
+    image: Assets.CNW,
     description: 'Open-world RPG with immersive storytelling',
     tech: ['Unreal Engine', 'C++', 'Maya']
   },
