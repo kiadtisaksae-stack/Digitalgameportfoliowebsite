@@ -15,19 +15,19 @@ const games = [
   },
   {
     id: 2,
-    title: 'Fantasy Quest',
-    genre: 'RPG Adventure',
-    image: 'https://images.unsplash.com/photo-1679322252828-d9dc50e83e12?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYW1lJTIwZW52aXJvbm1lbnQlMjBjb25jZXB0JTIwYXJ0fGVufDF8fHx8MTc2ODgxNDczNnww&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'Open-world RPG with immersive storytelling',
-    tech: ['Unreal Engine', 'C++', 'Maya']
+    title: 'Arimancer',
+    genre: 'RPG Adventrue',
+    image: Assets.ari,
+    description: 'เกม First Person Shooting ที่เราจะได้รับบทเป็น นักเวท ที่ต้องใช้ ทักษะ ในการ คำนวน คณิตศาสตร์ ',
+    tech: ['Unity', 'C#']
   },
   {
     id: 3,
     title: 'Try not to get eat',
     genre: 'Suvival Roglkie',
-    image: Assets.CNW,
-    description: 'Open-world RPG with immersive storytelling',
-    tech: ['Unreal Engine', 'C++', 'Maya']
+    image: Assets.tnte,
+    description: 'เราจะได้รับบทเป็น นักวิทยาศาสตร์ ที่ต้อง เอาชีวิตรอดจาก เอเลี่ยน',
+    tech: ['Unity', 'C#']
   },
 ];
 
