@@ -49,7 +49,7 @@ const skillCategories = [
 
 export function SkillsSection() {
   return (
-    <section id="technical-skills" className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
+    <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-black">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -63,9 +63,22 @@ export function SkillsSection() {
             <span className="text-purple-400">Technical Skills</span>
           </div>
           <h2 className="text-5xl font-bold mb-4">ทักษะและโปรแกรม</h2>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-400 text-lg mb-8">
             เครื่องมือและเทคโนโลยีที่ใช้ในการสร้างสรรค์ผลงาน
           </p>
+
+          <div className="flex flex-col items-center max-w-lg mx-auto bg-gray-800/30 p-4 rounded-xl border border-gray-700/50">
+             <div className="w-full h-2 bg-gray-700 rounded-full relative mb-2">
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-gray-500 rounded-full"></div>
+                <div className="absolute left-1/2 top-1/2 -translate-y-1/2 w-2 h-2 bg-gray-400 rounded-full -translate-x-1/2"></div>
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full"></div>
+             </div>
+             <div className="w-full flex justify-between text-xs text-gray-400 font-mono">
+                <span>Beginner (0%)</span>
+                <span>Intermediate (50%)</span>
+                <span>Advanced (100%)</span>
+             </div>
+          </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
