@@ -10,8 +10,8 @@ export function ContactMenu() {
       id: 'email',
       icon: Mail,
       label: 'Email',
-      value: 'contact@example.com',
-      link: 'mailto:contact@example.com',
+      value: 'nonomxp80@gmail.com',
+      link: 'mailto:nonomxp80@gmail.com',
       color: 'text-red-400',
       bgColor: 'bg-red-500/10',
       borderColor: 'border-red-500/20'
@@ -21,7 +21,7 @@ export function ContactMenu() {
       icon: Facebook,
       label: 'Facebook',
       value: 'My Facebook Profile',
-      link: 'https://facebook.com',
+      link: 'https://www.facebook.com/share/1DWsRzefku/?mibextid=wwXIfr',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/20'
@@ -31,7 +31,7 @@ export function ContactMenu() {
       icon: Instagram,
       label: 'Instagram',
       value: '@my_portfolio',
-      link: 'https://instagram.com',
+      link: 'https://www.instagram.com/black_ark47?igsh=OWlncDdnOHhndTU1&utm_source=qr',
       color: 'text-pink-400',
       bgColor: 'bg-pink-500/10',
       borderColor: 'border-pink-500/20'
