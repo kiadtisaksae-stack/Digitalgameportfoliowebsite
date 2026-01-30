@@ -28,7 +28,7 @@ const games = [
 
 export function GamesSection() {
   return (
-    <section className="py-20 px-4 bg-gray-900">
+    <section id="3d-modeling" className="py-20 px-4 bg-gradient-to-b from-black to-gray-900">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
