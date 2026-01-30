@@ -2,7 +2,8 @@ import { motion } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Gamepad2, ExternalLink } from 'lucide-react';
 import Slider from "react-slick";
-
+// Import Assets images
+import { Assets } from '../images';
 const games = [
   {
     id: 1,
