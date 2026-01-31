@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Play, Pause, Upload, User, Zap, Disc, Target, MousePointer2 } from 'lucide-react';
+import { X, Play, Pause, Upload, User, Zap, Disc, Target } from 'lucide-react';
 
-// --- Interfaces ---
 interface Stats {
   atk: number; hp: number; maxHp: number; speedAttack: number; speedWalk: number;
 }
@@ -34,9 +33,7 @@ export function MiniGame() {
   const [isPaused, setIsPaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
-  const [playerImage, setPlayerImage] = useState<string | null>(null);
-  const playerImageRef = useRef<HTMLImageElement | null>(null);
-
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
   const mousePosRef = useRef({ x: 0, y: 0 }); 
@@ -45,7 +42,7 @@ export function MiniGame() {
   
   const playerRef = useRef<Player>({
     x: 1000, y: 1000, radius: 15,
-    stats: { atk: 50, hp: 100, maxHp: 100, speedAttack: 1.5, speedWalk: 3.5 },
+    stats: { atk: 30, hp: 100, maxHp: 100, speedAttack: 1.5, speedWalk: 4 },
     xp: 0, level: 1, xpToNext: 100,
     shotCount: 1, hasLaser: false, hasPulse: false
   });
@@ -66,13 +63,12 @@ export function MiniGame() {
 
   const generateLevel = useCallback(() => {
     const obs: Obstacle[] = [];
-    for (let i = 0; i < 45; i++) {
-      const w = 60 + Math.random() * 140;
-      const h = 60 + Math.random() * 140;
+    for (let i = 0; i < 40; i++) {
+      const w = 80 + Math.random() * 150;
+      const h = 80 + Math.random() * 150;
       const x = Math.random() * (WORLD_SIZE.w - w);
       const y = Math.random() * (WORLD_SIZE.h - h);
-      const distToCenter = Math.hypot(x + w/2 - 1000, y + h/2 - 1000);
-      if (distToCenter > 250) obs.push({ x, y, w, h });
+      if (Math.hypot(x + w/2 - 1000, y + h/2 - 1000) > 300) obs.push({ x, y, w, h });
     }
     obstaclesRef.current = obs;
   }, []);
@@ -80,7 +76,7 @@ export function MiniGame() {
   const resetGame = useCallback(() => {
     playerRef.current = {
       x: 1000, y: 1000, radius: 15,
-      stats: { atk: 15, hp: 100, maxHp: 100, speedAttack: 1.5, speedWalk: 3.5 },
+      stats: { atk: 25, hp: 100, maxHp: 100, speedAttack: 1.5, speedWalk: 4 },
       xp: 0, level: 1, xpToNext: 100,
       shotCount: 1, hasLaser: false, hasPulse: false
     };
@@ -95,41 +91,21 @@ export function MiniGame() {
     setIsPaused(false);
   }, [generateLevel]);
 
-  const spawnEnemy = useCallback((isBoss = false) => {
-    const player = playerRef.current;
-    const angle = Math.random() * Math.PI * 2;
-    const dist = 800; 
-    const x = player.x + Math.cos(angle) * dist;
-    const y = player.y + Math.sin(angle) * dist;
-
-    enemiesRef.current.push({
-      id: enemyIdRef.current++,
-      x, y,
-      radius: isBoss ? 50 : 15,
-      hp: isBoss ? 200 : 30 + player.level * 5,
-      maxHp: isBoss ? 200 : 30 + player.level * 5,
-      speed: isBoss ? 1.0 : 1.5 + player.level * 0.1,
-      isBoss
-    });
-  }, []);
-
-  // ฟังก์ชันยิงเมื่อคลิกเมาส์
-  const handleShoot = useCallback(() => {
-    if (isPaused || gameOver || !isOpen) return;
+  const shoot = useCallback(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || isPaused || gameOver) return;
     
     const player = playerRef.current;
-    // คำนวณหาตำแหน่งเมาส์ในโลก (World Space) โดยหักลบ Offset ของกล้อง
-    const cameraOffsetX = canvas.width / 2 - player.x;
-    const cameraOffsetY = canvas.height / 2 - player.y;
-    const worldMouseX = mousePosRef.current.x - cameraOffsetX;
-    const worldMouseY = mousePosRef.current.y - cameraOffsetY;
+    // แก้ไขพิกัดเมาส์สำหรับหน้าต่างลอย
+    const camX = canvas.width / 2 - player.x;
+    const camY = canvas.height / 2 - player.y;
+    const worldMouseX = mousePosRef.current.x - camX;
+    const worldMouseY = mousePosRef.current.y - camY;
     
     const angle = Math.atan2(worldMouseY - player.y, worldMouseX - player.x);
     
     for (let i = 0; i < player.shotCount; i++) {
-      const finalAngle = angle + (i - (player.shotCount - 1) / 2) * 0.15;
+      const finalAngle = angle + (i - (player.shotCount - 1) / 2) * 0.2;
       projectilesRef.current.push({
         id: projectileIdRef.current++,
         x: player.x, y: player.y,
@@ -138,7 +114,7 @@ export function MiniGame() {
         isLaser: player.hasLaser, hitEnemies: new Set()
       });
     }
-  }, [isPaused, gameOver, isOpen]);
+  }, [isPaused, gameOver]);
 
   useEffect(() => {
     if (!isOpen || isPaused || gameOver) return;
@@ -149,229 +125,130 @@ export function MiniGame() {
     const gameLoop = (currentTime: number) => {
       const player = playerRef.current;
       
-      // Movement Logic
-      let nextPX = player.x;
-      let nextPY = player.y;
-      if (keysRef.current.has('KeyW')) nextPY -= player.stats.speedWalk;
-      if (keysRef.current.has('KeyS')) nextPY += player.stats.speedWalk;
-      if (keysRef.current.has('KeyA')) nextPX -= player.stats.speedWalk;
-      if (keysRef.current.has('KeyD')) nextPX += player.stats.speedWalk;
+      // Movement (WASD Fixed)
+      let nPX = player.x; let nPY = player.y;
+      if (keysRef.current.has('KeyW')) nPY -= player.stats.speedWalk;
+      if (keysRef.current.has('KeyS')) nPY += player.stats.speedWalk;
+      if (keysRef.current.has('KeyA')) nPX -= player.stats.speedWalk;
+      if (keysRef.current.has('KeyD')) nPX += player.stats.speedWalk;
 
-      let canPMoveX = nextPX > 0 && nextPX < WORLD_SIZE.w;
-      let canPMoveY = nextPY > 0 && nextPY < WORLD_SIZE.h;
-
+      let canPX = nPX > 0 && nPX < WORLD_SIZE.w;
+      let canPY = nPY > 0 && nPY < WORLD_SIZE.h;
       obstaclesRef.current.forEach(ob => {
-        if (nextPX + player.radius > ob.x && nextPX - player.radius < ob.x + ob.w &&
-            player.y + player.radius > ob.y && player.y - player.radius < ob.y + ob.h) canPMoveX = false;
-        if (player.x + player.radius > ob.x && player.x - player.radius < ob.x + ob.w &&
-            nextPY + player.radius > ob.y && nextPY - player.radius < ob.y + ob.h) canPMoveY = false;
+        if (nPX + player.radius > ob.x && nPX - player.radius < ob.x + ob.w && player.y + player.radius > ob.y && player.y - player.radius < ob.y + ob.h) canPX = false;
+        if (player.x + player.radius > ob.x && player.x - player.radius < ob.x + ob.w && nPY + player.radius > ob.y && nPY - player.radius < ob.y + ob.h) canPY = false;
       });
-      if (canPMoveX) player.x = nextPX;
-      if (canPMoveY) player.y = nextPY;
+      if (canPX) player.x = nPX; if (canPY) player.y = nPY;
 
-      // Pulse Skill
-      if (player.hasPulse && currentTime - lastPulseRef.current > 5000) {
-        enemiesRef.current.forEach(en => { if (Math.hypot(en.x - player.x, en.y - player.y) < 220) en.hp -= 50; });
-        lastPulseRef.current = currentTime;
+      // Spawning
+      if (currentTime - lastEnemySpawnRef.current > spawnIntervalRef.current) {
+        const angle = Math.random() * Math.PI * 2;
+        enemiesRef.current.push({ id: enemyIdRef.current++, x: player.x + Math.cos(angle)*600, y: player.y + Math.sin(angle)*600, radius: 15, hp: 30 + player.level*10, maxHp: 30 + player.level*10, speed: 1.5 + player.level*0.1 });
+        lastEnemySpawnRef.current = currentTime;
+      }
+      if (score - lastBossScoreRef.current >= 200) {
+        const angle = Math.random() * Math.PI * 2;
+        enemiesRef.current.push({ id: enemyIdRef.current++, x: player.x + Math.cos(angle)*600, y: player.y + Math.sin(angle)*600, radius: 45, hp: 500, maxHp: 500, speed: 1, isBoss: true });
+        lastBossScoreRef.current = score;
       }
 
-      // Enemy Spawning
-      if (currentTime - lastEnemySpawnRef.current > spawnIntervalRef.current) { 
-        spawnEnemy(); lastEnemySpawnRef.current = currentTime; 
-      }
-      if (score - lastBossScoreRef.current >= 150) { 
-        spawnEnemy(true); lastBossScoreRef.current = score; 
-      }
-
-      // Draw Start
+      // Draw Sequence
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
-      
-      // Camera Follow
       const camX = canvas.width / 2 - player.x;
       const camY = canvas.height / 2 - player.y;
       ctx.translate(camX, camY);
 
-      // Grid
+      // World
       ctx.fillStyle = '#050505'; ctx.fillRect(0,0, WORLD_SIZE.w, WORLD_SIZE.h);
-      ctx.strokeStyle = '#151515';
-      for(let i=0; i<=WORLD_SIZE.w; i+=100) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,WORLD_SIZE.h); ctx.stroke(); }
-      for(let i=0; i<=WORLD_SIZE.h; i+=100) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(WORLD_SIZE.w,i); ctx.stroke(); }
+      obstaclesRef.current.forEach(ob => { ctx.fillStyle = '#1e293b'; ctx.fillRect(ob.x, ob.y, ob.w, ob.h); });
 
-      // Obstacles
-      ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#334155';
-      obstaclesRef.current.forEach(ob => { ctx.fillRect(ob.x, ob.y, ob.w, ob.h); ctx.strokeRect(ob.x, ob.y, ob.w, ob.h); });
-
-      // Items
-      itemsRef.current.forEach((item, ii) => {
-        ctx.beginPath(); ctx.arc(item.x, item.y, 14, 0, Math.PI*2);
-        ctx.fillStyle = item.type==='shotgun'?'#fbbf24':item.type==='laser'?'#f87171':'#60a5fa'; ctx.fill();
-        if(Math.hypot(player.x-item.x, player.y-item.y) < 35) {
-          if(item.type==='shotgun') player.shotCount++;
-          else if(item.type==='laser') player.hasLaser = true;
-          else if(item.type==='pulse') player.hasPulse = true;
-          itemsRef.current.splice(ii, 1);
-        }
-      });
-
-      // Projectiles Logic (Kill on wall hit)
+      // Projectiles (Collision with walls)
       for (let i = projectilesRef.current.length - 1; i >= 0; i--) {
         const p = projectilesRef.current[i];
-        const nextX = p.x + p.vx * p.speed;
-        const nextY = p.y + p.vy * p.speed;
-        
-        let hitWall = false;
-        obstaclesRef.current.forEach(ob => {
-          if (nextX > ob.x && nextX < ob.x + ob.w && nextY > ob.y && nextY < ob.y + ob.h) hitWall = true;
-        });
-
-        if (hitWall) { projectilesRef.current.splice(i, 1); continue; }
-
-        p.x = nextX; p.y = nextY;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.isLaser?6:4, 0, Math.PI*2);
-        ctx.fillStyle = p.isLaser?'#ff0000':'#a855f7'; ctx.fill();
-        
+        p.x += p.vx * p.speed; p.y += p.vy * p.speed;
+        let hit = false;
+        obstaclesRef.current.forEach(ob => { if(p.x > ob.x && p.x < ob.x+ob.w && p.y > ob.y && p.y < ob.y+ob.h) hit = true; });
+        if (hit || p.x < 0 || p.x > WORLD_SIZE.w || p.y < 0 || p.y > WORLD_SIZE.h) { projectilesRef.current.splice(i, 1); continue; }
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2); ctx.fillStyle = '#a855f7'; ctx.fill();
         enemiesRef.current.forEach(en => {
-          if(Math.hypot(en.x-p.x, en.y-p.y) < en.radius+5) {
-            if(p.isLaser) { if(!p.hitEnemies.has(en.id)) { en.hp -= p.damage; p.hitEnemies.add(en.id); } }
-            else { en.hp -= p.damage; projectilesRef.current.splice(i, 1); }
-          }
+          if (Math.hypot(en.x - p.x, en.y - p.y) < en.radius + 5) { en.hp -= p.damage; projectilesRef.current.splice(i, 1); }
         });
-        if(p.x < 0 || p.x > WORLD_SIZE.w || p.y < 0 || p.y > WORLD_SIZE.h) projectilesRef.current.splice(i, 1);
       }
 
-      // Enemies Logic
+      // Enemies
       enemiesRef.current.forEach((en, ei) => {
         const angle = Math.atan2(player.y - en.y, player.x - en.x);
-        const nEx = en.x + Math.cos(angle) * en.speed;
-        const nEy = en.y + Math.sin(angle) * en.speed;
-        let cEx = true, cEy = true;
+        const nEx = en.x + Math.cos(angle)*en.speed; const nEy = en.y + Math.sin(angle)*en.speed;
+        let cEx = true; let cEy = true;
         obstaclesRef.current.forEach(ob => {
           if (nEx + en.radius > ob.x && nEx - en.radius < ob.x + ob.w && en.y + en.radius > ob.y && en.y - en.radius < ob.y + ob.h) cEx = false;
           if (en.x + en.radius > ob.x && en.x - en.radius < ob.x + ob.w && nEy + en.radius > ob.y && nEy - en.radius < ob.y + ob.h) cEy = false;
         });
-        if (cEx) en.x = nEx; if (cEy) en.y = nEy;
-
-        ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2);
-        ctx.fillStyle = en.isBoss?'#f97316':'#ef4444'; ctx.fill();
-        
-        if(Math.hypot(player.x-en.x, player.y-en.y) < player.radius+en.radius) {
-          player.stats.hp -= 0.5; if(player.stats.hp <= 0) setGameOver(true);
-        }
+        if(cEx) en.x = nEx; if(cEy) en.y = nEy;
+        ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2); ctx.fillStyle = en.isBoss ? '#f97316' : '#ef4444'; ctx.fill();
+        if(Math.hypot(player.x-en.x, player.y-en.y) < player.radius+en.radius) { player.stats.hp -= 0.5; if(player.stats.hp <= 0) setGameOver(true); }
         if(en.hp <= 0) {
           if(en.isBoss) {
-            spawnIntervalRef.current = Math.max(400, spawnIntervalRef.current - 450);
-            const types: ('shotgun' | 'laser' | 'pulse')[] = ['shotgun', 'laser', 'pulse'];
-            itemsRef.current.push({id: itemIdRef.current++, x: en.x, y: en.y, type: types[Math.floor(Math.random()*3)]});
+             spawnIntervalRef.current = Math.max(400, spawnIntervalRef.current - 400);
+             itemsRef.current.push({id: itemIdRef.current++, x: en.x, y: en.y, type: 'shotgun'});
           }
-          player.xp += en.isBoss ? 60 : 20;
-          if (player.xp >= player.xpToNext) {
-            player.level++; player.xp -= player.xpToNext; player.xpToNext = Math.floor(player.xpToNext * 1.6);
-            player.stats.atk += 12; player.stats.maxHp += 25; player.stats.hp = player.stats.maxHp;
-          }
+          player.xp += en.isBoss ? 100 : 20;
+          if(player.xp >= player.xpToNext) { player.level++; player.xp=0; player.xpToNext*=1.5; player.stats.atk+=10; player.stats.hp=player.stats.maxHp; }
           setScore(s => s + (en.isBoss?100:10)); enemiesRef.current.splice(ei, 1);
         }
       });
 
-      // Pulse FX
-      if(player.hasPulse && currentTime - lastPulseRef.current < 600) {
-        ctx.beginPath(); ctx.arc(player.x, player.y, 220 * ((currentTime-lastPulseRef.current)/600), 0, Math.PI*2);
-        ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4; ctx.stroke();
-      }
-
-      // Player Draw
-      ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
-      ctx.fillStyle = '#8b5cf6'; ctx.fill(); 
-
-      // Visual Aiming Crosshair in Game
-      const wMX = mousePosRef.current.x - camX;
-      const wMY = mousePosRef.current.y - camY;
-      ctx.beginPath(); ctx.arc(wMX, wMY, 5, 0, Math.PI*2);
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
-
-      ctx.restore(); 
+      // Player & Crosshair
+      ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2); ctx.fillStyle = '#8b5cf6'; ctx.fill();
+      const wMX = mousePosRef.current.x - camX; const wMY = mousePosRef.current.y - camY;
+      ctx.beginPath(); ctx.arc(wMX, wMY, 6, 0, Math.PI*2); ctx.strokeStyle = 'white'; ctx.stroke();
+      ctx.restore();
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
 
     animationFrameRef.current = requestAnimationFrame(gameLoop);
-    
     const hKD = (e: KeyboardEvent) => keysRef.current.add(e.code);
     const hKU = (e: KeyboardEvent) => keysRef.current.delete(e.code);
     const hMM = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mousePosRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
-
-    window.addEventListener('keydown', hKD);
-    window.addEventListener('keyup', hKU);
-    canvas.addEventListener('mousemove', hMM);
-    canvas.addEventListener('mousedown', handleShoot);
-
-    return () => { 
-      cancelAnimationFrame(animationFrameRef.current!); 
-      window.removeEventListener('keydown', hKD); 
-      window.removeEventListener('keyup', hKU);
-      canvas.removeEventListener('mousemove', hMM);
-      canvas.removeEventListener('mousedown', handleShoot);
-    };
-  }, [isOpen, isPaused, gameOver, score, handleShoot]);
+    window.addEventListener('keydown', hKD); window.addEventListener('keyup', hKU);
+    canvas.addEventListener('mousemove', hMM); canvas.addEventListener('mousedown', shoot);
+    return () => { cancelAnimationFrame(animationFrameRef.current!); window.removeEventListener('keydown', hKD); window.removeEventListener('keyup', hKU); canvas.removeEventListener('mousemove', hMM); canvas.removeEventListener('mousedown', shoot); };
+  }, [isOpen, isPaused, gameOver, score, shoot]);
 
   return (
     <>
-      <motion.button onClick={() => { setIsOpen(true); resetGame(); }} className="fixed bottom-8 right-8 z-40 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full font-semibold shadow-xl text-white">
-        <Play className="w-5 h-5 inline mr-2" /> เล่นมินิเกม
-      </motion.button>
-
+      <motion.button onClick={() => { setIsOpen(true); resetGame(); }} className="fixed bottom-8 right-8 z-40 px-6 py-3 bg-purple-600 rounded-full font-bold shadow-lg">เล่นมินิเกม</motion.button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
+          <motion.div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl font-mono">
-              <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white">
-                <div className="flex gap-6 items-center">
-                  <h3 className="font-bold text-xl">Survival Arena</h3>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-purple-400">LV {playerRef.current.level}</span>
-                    <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-purple-500" style={{ width: `${(playerRef.current.xp / playerRef.current.xpToNext) * 100}%` }} />
-                    </div>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[10px] text-red-400">HP {Math.ceil(playerRef.current.stats.hp)}</span>
-                    <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-red-500" style={{ width: `${(playerRef.current.stats.hp / playerRef.current.stats.maxHp) * 100}%` }} />
-                    </div>
-                  </div>
-                </div>
-
+              <div className="flex items-center justify-between p-4 bg-gray-800/50 text-white">
                 <div className="flex gap-4 items-center">
-                  <div className="flex gap-2">
-                    {playerRef.current.shotCount > 1 && <Target className="w-5 h-5 text-yellow-500" />}
-                    {playerRef.current.hasLaser && <Zap className="w-5 h-5 text-red-500" />}
-                    {playerRef.current.hasPulse && <Disc className="w-5 h-5 text-blue-500" />}
-                  </div>
-                  <button onClick={() => setIsPaused(!isPaused)} className="p-2 hover:bg-gray-800 rounded-lg">
-                    {isPaused ? <Play /> : <Pause />}
-                  </button>
-                  <button onClick={() => setIsOpen(false)}><X/></button>
+                  <span className="font-bold text-lg">LEVEL {playerRef.current.level}</span>
+                  <div className="w-32 h-2 bg-gray-700 rounded-full"><div className="h-full bg-purple-500" style={{width: `${(playerRef.current.xp/playerRef.current.xpToNext)*100}%`}}/></div>
+                  <span className="text-red-400">HP {Math.ceil(playerRef.current.stats.hp)}</span>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => setIsPaused(!isPaused)} className="p-2 hover:bg-white/10 rounded">{isPaused ? <Play/> : <Pause/>}</button>
+                  <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded"><X/></button>
                 </div>
               </div>
-
-              <div className="relative bg-black flex justify-center cursor-none">
-                <canvas ref={canvasRef} width={800} height={600} className="w-full" />
-                {isPaused && !gameOver && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-3xl font-bold">PAUSED</div>
-                )}
+              <div className="relative bg-black cursor-none">
+                <canvas ref={canvasRef} width={800} height={600} className="w-full h-auto" />
+                {isPaused && !gameOver && <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-3xl font-bold">PAUSED</div>}
                 {gameOver && (
                   <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white">
-                    <h2 className="text-5xl font-extrabold text-red-600 mb-2">GAME OVER</h2>
-                    <p className="mb-6">Score: {score}</p>
+                    <h2 className="text-5xl font-bold text-red-500 mb-4">GAME OVER</h2>
+                    <p className="text-xl mb-6">Score: {score}</p>
                     <button onClick={resetGame} className="px-10 py-3 bg-white text-black font-bold rounded-full">TRY AGAIN</button>
                   </div>
                 )}
               </div>
-              <div className="p-2 bg-gray-800/50 text-center text-[10px] text-gray-500">
-                WASD: MOVE | LEFT CLICK: SHOOT (FAST CLICK = FAST FIRE) | BULLETS BREAK ON WALLS
-              </div>
+              <div className="p-2 text-center text-[10px] text-gray-500">WASD: MOVE | CLICK: SHOOT | BOSS EVERY 200 PTS</div>
             </div>
           </motion.div>
         )}
