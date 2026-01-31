@@ -224,7 +224,13 @@ export function MiniGame() {
       <motion.button onClick={() => { setIsOpen(true); resetGame(); }} className="fixed bottom-8 right-8 z-40 px-6 py-3 bg-purple-600 rounded-full font-bold shadow-lg">เล่นมินิเกม</motion.button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-4">
+          <motion.div 
+            // เพิ่ม z-[9999] ตรงนี้ครับ
+            className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
             <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl font-mono">
               <div className="flex items-center justify-between p-4 bg-gray-800/50 text-white">
                 <div className="flex gap-4 items-center">
