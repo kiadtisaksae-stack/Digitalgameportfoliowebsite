@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Play, Pause, Upload, User, Zap, Disc, Target } from 'lucide-react';
 
+// --- Interfaces ---
 interface Stats {
   atk: number; hp: number; maxHp: number; speedAttack: number; speedWalk: number;
 }
@@ -96,7 +97,8 @@ export function MiniGame() {
     if (!canvas || isPaused || gameOver) return;
     
     const player = playerRef.current;
-    // แก้ไขพิกัดเมาส์สำหรับหน้าต่างลอย
+    // คำนวณพิกัดเมาส์ให้ตรงกับตำแหน่งในโลกของเกม (World Space) แม้จะอยู่ในหน้าต่างลอย
+    const rect = canvas.getBoundingClientRect();
     const camX = canvas.width / 2 - player.x;
     const camY = canvas.height / 2 - player.y;
     const worldMouseX = mousePosRef.current.x - camX;
@@ -125,7 +127,7 @@ export function MiniGame() {
     const gameLoop = (currentTime: number) => {
       const player = playerRef.current;
       
-      // Movement (WASD Fixed)
+      // Movement (แก้ปัญหาภาษาไทย)
       let nPX = player.x; let nPY = player.y;
       if (keysRef.current.has('KeyW')) nPY -= player.stats.speedWalk;
       if (keysRef.current.has('KeyS')) nPY += player.stats.speedWalk;
@@ -140,30 +142,31 @@ export function MiniGame() {
       });
       if (canPX) player.x = nPX; if (canPY) player.y = nPY;
 
-      // Spawning
+      // Enemy Spawn Scaling (บอสตายแต่ละครั้ง x 0.25 frequency)
       if (currentTime - lastEnemySpawnRef.current > spawnIntervalRef.current) {
         const angle = Math.random() * Math.PI * 2;
         enemiesRef.current.push({ id: enemyIdRef.current++, x: player.x + Math.cos(angle)*600, y: player.y + Math.sin(angle)*600, radius: 15, hp: 30 + player.level*10, maxHp: 30 + player.level*10, speed: 1.5 + player.level*0.1 });
         lastEnemySpawnRef.current = currentTime;
       }
+      
+      // Boss Spawn
       if (score - lastBossScoreRef.current >= 200) {
         const angle = Math.random() * Math.PI * 2;
         enemiesRef.current.push({ id: enemyIdRef.current++, x: player.x + Math.cos(angle)*600, y: player.y + Math.sin(angle)*600, radius: 45, hp: 500, maxHp: 500, speed: 1, isBoss: true });
         lastBossScoreRef.current = score;
       }
 
-      // Draw Sequence
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       const camX = canvas.width / 2 - player.x;
       const camY = canvas.height / 2 - player.y;
       ctx.translate(camX, camY);
 
-      // World
+      // World Render
       ctx.fillStyle = '#050505'; ctx.fillRect(0,0, WORLD_SIZE.w, WORLD_SIZE.h);
       obstaclesRef.current.forEach(ob => { ctx.fillStyle = '#1e293b'; ctx.fillRect(ob.x, ob.y, ob.w, ob.h); });
 
-      // Projectiles (Collision with walls)
+      // Projectiles (ไม่ทะลุกำแพง)
       for (let i = projectilesRef.current.length - 1; i >= 0; i--) {
         const p = projectilesRef.current[i];
         p.x += p.vx * p.speed; p.y += p.vy * p.speed;
@@ -176,7 +179,7 @@ export function MiniGame() {
         });
       }
 
-      // Enemies
+      // Enemy AI & Collision
       enemiesRef.current.forEach((en, ei) => {
         const angle = Math.atan2(player.y - en.y, player.x - en.x);
         const nEx = en.x + Math.cos(angle)*en.speed; const nEy = en.y + Math.sin(angle)*en.speed;
@@ -187,10 +190,10 @@ export function MiniGame() {
         });
         if(cEx) en.x = nEx; if(cEy) en.y = nEy;
         ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2); ctx.fillStyle = en.isBoss ? '#f97316' : '#ef4444'; ctx.fill();
-        if(Math.hypot(player.x-en.x, player.y-en.y) < player.radius+en.radius) { player.stats.hp -= 0.5; if(player.stats.hp <= 0) setGameOver(true); }
         if(en.hp <= 0) {
           if(en.isBoss) {
-             spawnIntervalRef.current = Math.max(400, spawnIntervalRef.current - 400);
+             // เพิ่มความถี่การเกิด 25%
+             spawnIntervalRef.current = Math.max(400, spawnIntervalRef.current * 0.75); 
              itemsRef.current.push({id: itemIdRef.current++, x: en.x, y: en.y, type: 'shotgun'});
           }
           player.xp += en.isBoss ? 100 : 20;
@@ -199,7 +202,7 @@ export function MiniGame() {
         }
       });
 
-      // Player & Crosshair
+      // Player & Aim Visual
       ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2); ctx.fillStyle = '#8b5cf6'; ctx.fill();
       const wMX = mousePosRef.current.x - camX; const wMY = mousePosRef.current.y - camY;
       ctx.beginPath(); ctx.arc(wMX, wMY, 6, 0, Math.PI*2); ctx.strokeStyle = 'white'; ctx.stroke();
@@ -224,13 +227,7 @@ export function MiniGame() {
       <motion.button onClick={() => { setIsOpen(true); resetGame(); }} className="fixed bottom-8 right-8 z-40 px-6 py-3 bg-purple-600 rounded-full font-bold shadow-lg">เล่นมินิเกม</motion.button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div 
-            // เพิ่ม z-[9999] ตรงนี้ครับ
-            className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <motion.div className="fixed inset-0 bg-black/95 z-[9999] flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl font-mono">
               <div className="flex items-center justify-between p-4 bg-gray-800/50 text-white">
                 <div className="flex gap-4 items-center">
@@ -247,14 +244,13 @@ export function MiniGame() {
                 <canvas ref={canvasRef} width={800} height={600} className="w-full h-auto" />
                 {isPaused && !gameOver && <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-3xl font-bold">PAUSED</div>}
                 {gameOver && (
-                  <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white">
+                  <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white text-center">
                     <h2 className="text-5xl font-bold text-red-500 mb-4">GAME OVER</h2>
                     <p className="text-xl mb-6">Score: {score}</p>
                     <button onClick={resetGame} className="px-10 py-3 bg-white text-black font-bold rounded-full">TRY AGAIN</button>
                   </div>
                 )}
               </div>
-              <div className="p-2 text-center text-[10px] text-gray-500">WASD: MOVE | CLICK: SHOOT | BOSS EVERY 200 PTS</div>
             </div>
           </motion.div>
         )}
