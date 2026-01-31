@@ -63,8 +63,10 @@ export function MiniGame() {
   const itemIdRef = useRef<number>(0);
   const lastEnemySpawnRef = useRef<number>(0);
   const lastBossScoreRef = useRef<number>(0);
+  
+  // New: Spawn Difficulty Scaling
+  const spawnIntervalRef = useRef<number>(1800);
 
-  // สุ่มสร้างสิ่งปลูกสร้าง
   const generateLevel = useCallback(() => {
     const obs: Obstacle[] = [];
     for (let i = 0; i < 45; i++) {
@@ -72,11 +74,8 @@ export function MiniGame() {
       const h = 60 + Math.random() * 140;
       const x = Math.random() * (WORLD_SIZE.w - w);
       const y = Math.random() * (WORLD_SIZE.h - h);
-      
       const distToCenter = Math.hypot(x + w/2 - 1000, y + h/2 - 1000);
-      if (distToCenter > 250) {
-        obs.push({ x, y, w, h });
-      }
+      if (distToCenter > 250) obs.push({ x, y, w, h });
     }
     obstaclesRef.current = obs;
   }, []);
@@ -91,6 +90,7 @@ export function MiniGame() {
     enemiesRef.current = [];
     projectilesRef.current = [];
     itemsRef.current = [];
+    spawnIntervalRef.current = 1800; // Reset Difficulty
     generateLevel();
     setScore(0);
     lastBossScoreRef.current = 0;
@@ -109,8 +109,8 @@ export function MiniGame() {
       id: enemyIdRef.current++,
       x, y,
       radius: isBoss ? 45 : 12,
-      hp: isBoss ? 600 : 25 + player.level * 5,
-      maxHp: isBoss ? 600 : 25 + player.level * 5,
+      hp: isBoss ? 100 : 25 + player.level * 5,
+      maxHp: isBoss ? 100 : 25 + player.level * 5,
       speed: isBoss ? 0.9 : 1.2 + player.level * 0.1,
       isBoss
     });
@@ -145,7 +145,7 @@ export function MiniGame() {
     const gameLoop = (currentTime: number) => {
       const player = playerRef.current;
       
-      // --- Logic: Movement (Fix Language using Code) ---
+      // Movement
       let nextPX = player.x;
       let nextPY = player.y;
       if (keysRef.current.has('KeyW')) nextPY -= player.stats.speedWalk;
@@ -171,27 +171,36 @@ export function MiniGame() {
         lastPulseRef.current = currentTime;
       }
 
-      // Spawning
-      if (currentTime - lastEnemySpawnRef.current > 1800) { spawnEnemy(); lastEnemySpawnRef.current = currentTime; }
-      if (score - lastBossScoreRef.current >= 500) { spawnEnemy(true); lastBossScoreRef.current = score; }
-      if (currentTime - lastAttackRef.current > 1000 / player.stats.speedAttack) { shoot(); lastAttackRef.current = currentTime; }
+      // Spawning with Dynamic Interval
+      if (currentTime - lastEnemySpawnRef.current > spawnIntervalRef.current) { 
+        spawnEnemy(); 
+        lastEnemySpawnRef.current = currentTime; 
+      }
+      if (score - lastBossScoreRef.current >= 150) { 
+        spawnEnemy(true); 
+        lastBossScoreRef.current = score; 
+      }
+      if (currentTime - lastAttackRef.current > 1000 / player.stats.speedAttack) { 
+        shoot(); 
+        lastAttackRef.current = currentTime; 
+      }
 
-      // --- Draw & Camera ---
+      // Draw
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.translate(canvas.width/2 - player.x, canvas.height/2 - player.y);
 
-      // World & Grid
+      // World
       ctx.fillStyle = '#050505'; ctx.fillRect(0,0, WORLD_SIZE.w, WORLD_SIZE.h);
       ctx.strokeStyle = '#111'; ctx.lineWidth = 1;
       for(let i=0; i<=WORLD_SIZE.w; i+=100) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,WORLD_SIZE.h); ctx.stroke(); }
       for(let i=0; i<=WORLD_SIZE.h; i+=100) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(WORLD_SIZE.w,i); ctx.stroke(); }
 
-      // Obstacles
-      ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#334155';
-      obstaclesRef.current.forEach(ob => { ctx.fillRect(ob.x, ob.y, ob.w, ob.h); ctx.strokeRect(ob.x, ob.y, ob.w, ob.h); });
+      obstaclesRef.current.forEach(ob => {
+        ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#334155';
+        ctx.fillRect(ob.x, ob.y, ob.w, ob.h); ctx.strokeRect(ob.x, ob.y, ob.w, ob.h);
+      });
 
-      // Items
       itemsRef.current.forEach((item, ii) => {
         ctx.beginPath(); ctx.arc(item.x, item.y, 12, 0, Math.PI*2);
         ctx.fillStyle = item.type==='shotgun'?'#fbbf24':item.type==='laser'?'#f87171':'#60a5fa'; ctx.fill();
@@ -203,7 +212,6 @@ export function MiniGame() {
         }
       });
 
-      // Projectiles
       projectilesRef.current.forEach((p, pi) => {
         p.x += p.vx * p.speed; p.y += p.vy * p.speed;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.isLaser?6:4, 0, Math.PI*2);
@@ -217,30 +225,16 @@ export function MiniGame() {
         if(p.x < 0 || p.x > WORLD_SIZE.w || p.y < 0 || p.y > WORLD_SIZE.h) projectilesRef.current.splice(pi, 1);
       });
 
-      // --- Enemies with FIXED Wall Collision ---
       enemiesRef.current.forEach((en, ei) => {
         const angle = Math.atan2(player.y - en.y, player.x - en.x);
         const nEx = en.x + Math.cos(angle) * en.speed;
         const nEy = en.y + Math.sin(angle) * en.speed;
-        
-        let canEx = true;
-        let canEy = true;
-
+        let cEx = true, cEy = true;
         obstaclesRef.current.forEach(ob => {
-          // Check X axis collision
-          if (nEx + en.radius > ob.x && nEx - en.radius < ob.x + ob.w &&
-              en.y + en.radius > ob.y && en.y - en.radius < ob.y + ob.h) {
-            canEx = false;
-          }
-          // Check Y axis collision
-          if (en.x + en.radius > ob.x && en.x - en.radius < ob.x + ob.w &&
-              nEy + en.radius > ob.y && nEy - en.radius < ob.y + ob.h) {
-            canEy = false;
-          }
+          if (nEx + en.radius > ob.x && nEx - en.radius < ob.x + ob.w && en.y + en.radius > ob.y && en.y - en.radius < ob.y + ob.h) cEx = false;
+          if (en.x + en.radius > ob.x && en.x - en.radius < ob.x + ob.w && nEy + en.radius > ob.y && nEy - en.radius < ob.y + ob.h) cEy = false;
         });
-
-        if (canEx) en.x = nEx;
-        if (canEy) en.y = nEy;
+        if (cEx) en.x = nEx; if (cEy) en.y = nEy;
 
         ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2);
         ctx.fillStyle = en.isBoss?'#f97316':'#ef4444'; ctx.fill();
@@ -250,6 +244,10 @@ export function MiniGame() {
         }
         if(en.hp <= 0) {
           if(en.isBoss) {
+            // Difficulty Scaling: Decrease interval (Increase frequency)
+            // 1800 * 0.25 = 450ms. Reducing 450ms per boss kill.
+            spawnIntervalRef.current = Math.max(400, spawnIntervalRef.current - 450);
+            
             const types: ('shotgun' | 'laser' | 'pulse')[] = ['shotgun', 'laser', 'pulse'];
             itemsRef.current.push({id: itemIdRef.current++, x: en.x, y: en.y, type: types[Math.floor(Math.random()*3)]});
           }
@@ -257,14 +255,12 @@ export function MiniGame() {
         }
       });
 
-      // Effects & Player
       if(player.hasPulse && currentTime - lastPulseRef.current < 600) {
         ctx.beginPath(); ctx.arc(player.x, player.y, 180 * ((currentTime-lastPulseRef.current)/600), 0, Math.PI*2);
         ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.stroke();
       }
       ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
-      ctx.fillStyle = '#8b5cf6'; ctx.fill(); 
-      ctx.restore(); 
+      ctx.fillStyle = '#8b5cf6'; ctx.fill(); ctx.restore(); 
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
@@ -285,8 +281,8 @@ export function MiniGame() {
       <AnimatePresence>
         {isOpen && (
           <motion.div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
-            <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white font-mono">
+            <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl font-mono">
+              <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white">
                 <div className="flex gap-6">
                   <h3 className="font-bold">Survival Arena</h3>
                   <span className="text-blue-400">Score: {score}</span>
@@ -311,8 +307,8 @@ export function MiniGame() {
                   </div>
                 )}
               </div>
-              <div className="p-3 bg-gray-800/50 text-center text-xs text-gray-500">
-                [W,A,S,D] MOVE | KILL BOSS EVERY 500 PTS | ENEMIES NO LONGER PASS WALLS
+              <div className="p-3 bg-gray-800/50 text-center text-xs text-gray-400">
+                [W,A,S,D] MOVE | BOSS KILLS INCREASE SPAWN RATE! | MIN SPAWN: 400ms
               </div>
             </div>
           </motion.div>
