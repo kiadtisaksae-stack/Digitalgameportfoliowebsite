@@ -45,7 +45,7 @@ export function MiniGame() {
   
   const playerRef = useRef<Player>({
     x: 1000, y: 1000, radius: 15,
-    stats: { atk: 20, hp: 100, maxHp: 100, speedAttack: 1, speedWalk: 3 },
+    stats: { atk: 50, hp: 100, maxHp: 100, speedAttack: 1, speedWalk: 3 },
     xp: 0, level: 1, xpToNext: 100,
     shotCount: 1, hasLaser: false, hasPulse: false
   });
@@ -67,9 +67,9 @@ export function MiniGame() {
   // สุ่มสร้างสิ่งปลูกสร้าง
   const generateLevel = useCallback(() => {
     const obs: Obstacle[] = [];
-    for (let i = 0; i < 40; i++) {
-      const w = 60 + Math.random() * 120;
-      const h = 60 + Math.random() * 120;
+    for (let i = 0; i < 45; i++) {
+      const w = 60 + Math.random() * 140;
+      const h = 60 + Math.random() * 140;
       const x = Math.random() * (WORLD_SIZE.w - w);
       const y = Math.random() * (WORLD_SIZE.h - h);
       
@@ -101,7 +101,7 @@ export function MiniGame() {
   const spawnEnemy = useCallback((isBoss = false) => {
     const player = playerRef.current;
     const angle = Math.random() * Math.PI * 2;
-    const dist = 500; 
+    const dist = 600; 
     const x = player.x + Math.cos(angle) * dist;
     const y = player.y + Math.sin(angle) * dist;
 
@@ -145,51 +145,43 @@ export function MiniGame() {
     const gameLoop = (currentTime: number) => {
       const player = playerRef.current;
       
-      // --- Logic: Movement (Fix Language) ---
-      let nextX = player.x;
-      let nextY = player.y;
-      if (keysRef.current.has('KeyW')) nextY -= player.stats.speedWalk;
-      if (keysRef.current.has('KeyS')) nextY += player.stats.speedWalk;
-      if (keysRef.current.has('KeyA')) nextX -= player.stats.speedWalk;
-      if (keysRef.current.has('KeyD')) nextX += player.stats.speedWalk;
+      // --- Logic: Movement (Fix Language using Code) ---
+      let nextPX = player.x;
+      let nextPY = player.y;
+      if (keysRef.current.has('KeyW')) nextPY -= player.stats.speedWalk;
+      if (keysRef.current.has('KeyS')) nextPY += player.stats.speedWalk;
+      if (keysRef.current.has('KeyA')) nextPX -= player.stats.speedWalk;
+      if (keysRef.current.has('KeyD')) nextPX += player.stats.speedWalk;
 
-      let canMoveX = nextX > 0 && nextX < WORLD_SIZE.w;
-      let canMoveY = nextY > 0 && nextY < WORLD_SIZE.h;
+      let canPMoveX = nextPX > 0 && nextPX < WORLD_SIZE.w;
+      let canPMoveY = nextPY > 0 && nextPY < WORLD_SIZE.h;
 
       obstaclesRef.current.forEach(ob => {
-        if (nextX + player.radius > ob.x && nextX - player.radius < ob.x + ob.w &&
-            player.y + player.radius > ob.y && player.y - player.radius < ob.y + ob.h) canMoveX = false;
+        if (nextPX + player.radius > ob.x && nextPX - player.radius < ob.x + ob.w &&
+            player.y + player.radius > ob.y && player.y - player.radius < ob.y + ob.h) canPMoveX = false;
         if (player.x + player.radius > ob.x && player.x - player.radius < ob.x + ob.w &&
-            nextY + player.radius > ob.y && nextY - player.radius < ob.y + ob.h) canMoveY = false;
+            nextPY + player.radius > ob.y && nextPY - player.radius < ob.y + ob.h) canPMoveY = false;
       });
+      if (canPMoveX) player.x = nextPX;
+      if (canPMoveY) player.y = nextPY;
 
-      if (canMoveX) player.x = nextX;
-      if (canMoveY) player.y = nextY;
-
-      // Pulse Skill Every 5s
+      // Pulse Skill
       if (player.hasPulse && currentTime - lastPulseRef.current > 5000) {
-        enemiesRef.current.forEach(en => {
-          if (Math.hypot(en.x - player.x, en.y - player.y) < 180) en.hp -= 30;
-        });
+        enemiesRef.current.forEach(en => { if (Math.hypot(en.x - player.x, en.y - player.y) < 180) en.hp -= 30; });
         lastPulseRef.current = currentTime;
       }
 
-      if (currentTime - lastEnemySpawnRef.current > 1800) {
-        spawnEnemy(); lastEnemySpawnRef.current = currentTime;
-      }
-      if (score - lastBossScoreRef.current >= 500) {
-        spawnEnemy(true); lastBossScoreRef.current = score;
-      }
-      if (currentTime - lastAttackRef.current > 1000 / player.stats.speedAttack) {
-        shoot(); lastAttackRef.current = currentTime;
-      }
+      // Spawning
+      if (currentTime - lastEnemySpawnRef.current > 1800) { spawnEnemy(); lastEnemySpawnRef.current = currentTime; }
+      if (score - lastBossScoreRef.current >= 500) { spawnEnemy(true); lastBossScoreRef.current = score; }
+      if (currentTime - lastAttackRef.current > 1000 / player.stats.speedAttack) { shoot(); lastAttackRef.current = currentTime; }
 
       // --- Draw & Camera ---
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
       ctx.translate(canvas.width/2 - player.x, canvas.height/2 - player.y);
 
-      // Grid
+      // World & Grid
       ctx.fillStyle = '#050505'; ctx.fillRect(0,0, WORLD_SIZE.w, WORLD_SIZE.h);
       ctx.strokeStyle = '#111'; ctx.lineWidth = 1;
       for(let i=0; i<=WORLD_SIZE.w; i+=100) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,WORLD_SIZE.h); ctx.stroke(); }
@@ -222,22 +214,37 @@ export function MiniGame() {
             else { en.hp -= p.damage; projectilesRef.current.splice(pi, 1); }
           }
         });
+        if(p.x < 0 || p.x > WORLD_SIZE.w || p.y < 0 || p.y > WORLD_SIZE.h) projectilesRef.current.splice(pi, 1);
       });
 
-      // Enemies with Wall Collision
+      // --- Enemies with FIXED Wall Collision ---
       enemiesRef.current.forEach((en, ei) => {
         const angle = Math.atan2(player.y - en.y, player.x - en.x);
-        let nEx = en.x + Math.cos(angle) * en.speed;
-        let nEy = en.y + Math.sin(angle) * en.speed;
-        let cX = true, cY = true;
+        const nEx = en.x + Math.cos(angle) * en.speed;
+        const nEy = en.y + Math.sin(angle) * en.speed;
+        
+        let canEx = true;
+        let canEy = true;
+
         obstaclesRef.current.forEach(ob => {
-          if (nEx + en.radius > ob.x && nEx - en.radius < ob.x + ob.w && en.y + en.radius > ob.y && en.y - en.radius < ob.y + ob.h) cX = false;
-          if (en.x + en.radius > ob.x && en.x - en.radius < ob.x + ob.w && nEy + en.radius > ob.y && nEy - en.radius < ob.y + ob.h) cY = false;
+          // Check X axis collision
+          if (nEx + en.radius > ob.x && nEx - en.radius < ob.x + ob.w &&
+              en.y + en.radius > ob.y && en.y - en.radius < ob.y + ob.h) {
+            canEx = false;
+          }
+          // Check Y axis collision
+          if (en.x + en.radius > ob.x && en.x - en.radius < ob.x + ob.w &&
+              nEy + en.radius > ob.y && nEy - en.radius < ob.y + ob.h) {
+            canEy = false;
+          }
         });
-        if(cX) en.x = nEx; if(cY) en.y = nEy;
+
+        if (canEx) en.x = nEx;
+        if (canEy) en.y = nEy;
 
         ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2);
         ctx.fillStyle = en.isBoss?'#f97316':'#ef4444'; ctx.fill();
+        
         if(Math.hypot(player.x-en.x, player.y-en.y) < player.radius+en.radius) {
           player.stats.hp -= 0.3; if(player.stats.hp <= 0) setGameOver(true);
         }
@@ -250,13 +257,14 @@ export function MiniGame() {
         }
       });
 
-      // Player & Pulse Effect
+      // Effects & Player
       if(player.hasPulse && currentTime - lastPulseRef.current < 600) {
         ctx.beginPath(); ctx.arc(player.x, player.y, 180 * ((currentTime-lastPulseRef.current)/600), 0, Math.PI*2);
         ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.stroke();
       }
       ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
-      ctx.fillStyle = '#8b5cf6'; ctx.fill(); ctx.restore();
+      ctx.fillStyle = '#8b5cf6'; ctx.fill(); 
+      ctx.restore(); 
 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
@@ -278,7 +286,7 @@ export function MiniGame() {
         {isOpen && (
           <motion.div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl">
-              <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white">
+              <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white font-mono">
                 <div className="flex gap-6">
                   <h3 className="font-bold">Survival Arena</h3>
                   <span className="text-blue-400">Score: {score}</span>
@@ -286,25 +294,25 @@ export function MiniGame() {
                 </div>
                 <div className="flex gap-4 items-center">
                   <div className="flex gap-2">
-                    {playerRef.current.shotCount > 1 && <Target className="w-5 h-5 text-yellow-500" title="Shotgun Upgrade" />}
-                    {playerRef.current.hasLaser && <Zap className="w-5 h-5 text-red-500" title="Laser Beam" />}
-                    {playerRef.current.hasPulse && <Disc className="w-5 h-5 text-blue-500" title="Pulse Skill" />}
+                    {playerRef.current.shotCount > 1 && <Target className="w-5 h-5 text-yellow-500" />}
+                    {playerRef.current.hasLaser && <Zap className="w-5 h-5 text-red-500" />}
+                    {playerRef.current.hasPulse && <Disc className="w-5 h-5 text-blue-500" />}
                   </div>
                   <button onClick={() => setIsOpen(false)} className="hover:bg-gray-800 p-1 rounded"><X/></button>
                 </div>
               </div>
-              <div className="relative bg-black flex justify-center overflow-hidden">
-                <canvas ref={canvasRef} width={800} height={600} className="w-full cursor-none" />
+              <div className="relative bg-black flex justify-center">
+                <canvas ref={canvasRef} width={800} height={600} className="w-full cursor-crosshair" />
                 {gameOver && (
                   <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white">
                     <h2 className="text-5xl font-extrabold text-red-600 mb-2">GAME OVER</h2>
-                    <p className="text-xl mb-6">Final Score: {score}</p>
+                    <p className="text-xl mb-6">Score: {score}</p>
                     <button onClick={resetGame} className="px-10 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all">TRY AGAIN</button>
                   </div>
                 )}
               </div>
-              <div className="p-3 bg-gray-800/50 text-center text-xs text-gray-500 font-mono">
-                [W,A,S,D] MOVE | AUTO ATTACK | KILL BOSS TO GET UPGRADES
+              <div className="p-3 bg-gray-800/50 text-center text-xs text-gray-500">
+                [W,A,S,D] MOVE | KILL BOSS EVERY 500 PTS | ENEMIES NO LONGER PASS WALLS
               </div>
             </div>
           </motion.div>
