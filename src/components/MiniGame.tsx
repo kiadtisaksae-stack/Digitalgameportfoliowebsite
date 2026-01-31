@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Play, Pause, Upload, User, Zap, Disc, Target } from 'lucide-react';
+import { X, Play, Pause, Upload, User, Zap, Disc, Target, MousePointer2 } from 'lucide-react';
 
 // --- Interfaces ---
 interface Stats {
@@ -39,7 +39,7 @@ export function MiniGame() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
-  const mousePosRef = useRef({ x: 0, y: 0 }); // เก็บตำแหน่งเมาส์
+  const mousePosRef = useRef({ x: 0, y: 0 }); 
   
   const WORLD_SIZE = { w: 2000, h: 2000 };
   
@@ -56,7 +56,6 @@ export function MiniGame() {
   const obstaclesRef = useRef<Obstacle[]>([]); 
   const keysRef = useRef<Set<string>>(new Set());
   
-  const lastAttackRef = useRef<number>(0);
   const lastPulseRef = useRef<number>(0);
   const enemyIdRef = useRef<number>(0);
   const projectileIdRef = useRef<number>(0);
@@ -99,7 +98,7 @@ export function MiniGame() {
   const spawnEnemy = useCallback((isBoss = false) => {
     const player = playerRef.current;
     const angle = Math.random() * Math.PI * 2;
-    const dist = 700; 
+    const dist = 800; 
     const x = player.x + Math.cos(angle) * dist;
     const y = player.y + Math.sin(angle) * dist;
 
@@ -107,32 +106,39 @@ export function MiniGame() {
       id: enemyIdRef.current++,
       x, y,
       radius: isBoss ? 50 : 15,
-      hp: isBoss ? 150 : 30 + player.level * 5,
-      maxHp: isBoss ? 150 : 30 + player.level * 5,
+      hp: isBoss ? 200 : 30 + player.level * 5,
+      maxHp: isBoss ? 200 : 30 + player.level * 5,
       speed: isBoss ? 1.0 : 1.5 + player.level * 0.1,
       isBoss
     });
   }, []);
 
-  const shootTowardsMouse = useCallback((canvas: HTMLCanvasElement) => {
+  // ฟังก์ชันยิงเมื่อคลิกเมาส์
+  const handleShoot = useCallback(() => {
+    if (isPaused || gameOver || !isOpen) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
     const player = playerRef.current;
-    // คำนวณตำแหน่งเมาส์ใน World Space (เพราะกล้องเลื่อน)
-    const worldMouseX = mousePosRef.current.x - (canvas.width/2 - player.x);
-    const worldMouseY = mousePosRef.current.y - (canvas.height/2 - player.y);
+    // คำนวณหาตำแหน่งเมาส์ในโลก (World Space) โดยหักลบ Offset ของกล้อง
+    const cameraOffsetX = canvas.width / 2 - player.x;
+    const cameraOffsetY = canvas.height / 2 - player.y;
+    const worldMouseX = mousePosRef.current.x - cameraOffsetX;
+    const worldMouseY = mousePosRef.current.y - cameraOffsetY;
     
     const angle = Math.atan2(worldMouseY - player.y, worldMouseX - player.x);
     
     for (let i = 0; i < player.shotCount; i++) {
-      const finalAngle = angle + (i - (player.shotCount - 1) / 2) * 0.2;
+      const finalAngle = angle + (i - (player.shotCount - 1) / 2) * 0.15;
       projectilesRef.current.push({
         id: projectileIdRef.current++,
         x: player.x, y: player.y,
         vx: Math.cos(finalAngle), vy: Math.sin(finalAngle),
-        speed: 10, damage: player.stats.atk,
+        speed: 12, damage: player.stats.atk,
         isLaser: player.hasLaser, hitEnemies: new Set()
       });
     }
-  }, []);
+  }, [isPaused, gameOver, isOpen]);
 
   useEffect(() => {
     if (!isOpen || isPaused || gameOver) return;
@@ -141,7 +147,6 @@ export function MiniGame() {
     if (!canvas || !ctx) return;
 
     const gameLoop = (currentTime: number) => {
-      if (isPaused) return;
       const player = playerRef.current;
       
       // Movement Logic
@@ -164,31 +169,32 @@ export function MiniGame() {
       if (canPMoveX) player.x = nextPX;
       if (canPMoveY) player.y = nextPY;
 
-      // Pulse
+      // Pulse Skill
       if (player.hasPulse && currentTime - lastPulseRef.current > 5000) {
-        enemiesRef.current.forEach(en => { if (Math.hypot(en.x - player.x, en.y - player.y) < 200) en.hp -= 40; });
+        enemiesRef.current.forEach(en => { if (Math.hypot(en.x - player.x, en.y - player.y) < 220) en.hp -= 50; });
         lastPulseRef.current = currentTime;
       }
 
-      // Spawning & Shooting
+      // Enemy Spawning
       if (currentTime - lastEnemySpawnRef.current > spawnIntervalRef.current) { 
         spawnEnemy(); lastEnemySpawnRef.current = currentTime; 
       }
       if (score - lastBossScoreRef.current >= 150) { 
         spawnEnemy(true); lastBossScoreRef.current = score; 
       }
-      if (currentTime - lastAttackRef.current > 1000 / player.stats.speedAttack) { 
-        shootTowardsMouse(canvas); lastAttackRef.current = currentTime; 
-      }
 
-      // Draw Sequence
+      // Draw Start
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
-      ctx.translate(canvas.width/2 - player.x, canvas.height/2 - player.y);
+      
+      // Camera Follow
+      const camX = canvas.width / 2 - player.x;
+      const camY = canvas.height / 2 - player.y;
+      ctx.translate(camX, camY);
 
-      // Map Background
+      // Grid
       ctx.fillStyle = '#050505'; ctx.fillRect(0,0, WORLD_SIZE.w, WORLD_SIZE.h);
-      ctx.strokeStyle = '#111';
+      ctx.strokeStyle = '#151515';
       for(let i=0; i<=WORLD_SIZE.w; i+=100) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,WORLD_SIZE.h); ctx.stroke(); }
       for(let i=0; i<=WORLD_SIZE.h; i+=100) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(WORLD_SIZE.w,i); ctx.stroke(); }
 
@@ -200,7 +206,7 @@ export function MiniGame() {
       itemsRef.current.forEach((item, ii) => {
         ctx.beginPath(); ctx.arc(item.x, item.y, 14, 0, Math.PI*2);
         ctx.fillStyle = item.type==='shotgun'?'#fbbf24':item.type==='laser'?'#f87171':'#60a5fa'; ctx.fill();
-        if(Math.hypot(player.x-item.x, player.y-item.y) < 30) {
+        if(Math.hypot(player.x-item.x, player.y-item.y) < 35) {
           if(item.type==='shotgun') player.shotCount++;
           else if(item.type==='laser') player.hasLaser = true;
           else if(item.type==='pulse') player.hasPulse = true;
@@ -208,26 +214,22 @@ export function MiniGame() {
         }
       });
 
-      // Projectiles (With Wall Collision)
+      // Projectiles Logic (Kill on wall hit)
       for (let i = projectilesRef.current.length - 1; i >= 0; i--) {
         const p = projectilesRef.current[i];
-        const nextPX = p.x + p.vx * p.speed;
-        const nextPY = p.y + p.vy * p.speed;
+        const nextX = p.x + p.vx * p.speed;
+        const nextY = p.y + p.vy * p.speed;
         
-        // Check collision with walls
         let hitWall = false;
         obstaclesRef.current.forEach(ob => {
-          if (nextPX > ob.x && nextPX < ob.x + ob.w && nextPY > ob.y && nextPY < ob.y + ob.h) hitWall = true;
+          if (nextX > ob.x && nextX < ob.x + ob.w && nextY > ob.y && nextY < ob.y + ob.h) hitWall = true;
         });
 
-        if (hitWall) {
-          projectilesRef.current.splice(i, 1);
-          continue;
-        }
+        if (hitWall) { projectilesRef.current.splice(i, 1); continue; }
 
-        p.x = nextPX; p.y = nextPY;
+        p.x = nextX; p.y = nextY;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.isLaser?6:4, 0, Math.PI*2);
-        ctx.fillStyle = p.isLaser?'#ff4444':'#a855f7'; ctx.fill();
+        ctx.fillStyle = p.isLaser?'#ff0000':'#a855f7'; ctx.fill();
         
         enemiesRef.current.forEach(en => {
           if(Math.hypot(en.x-p.x, en.y-p.y) < en.radius+5) {
@@ -238,7 +240,7 @@ export function MiniGame() {
         if(p.x < 0 || p.x > WORLD_SIZE.w || p.y < 0 || p.y > WORLD_SIZE.h) projectilesRef.current.splice(i, 1);
       }
 
-      // Enemies
+      // Enemies Logic
       enemiesRef.current.forEach((en, ei) => {
         const angle = Math.atan2(player.y - en.y, player.x - en.x);
         const nEx = en.x + Math.cos(angle) * en.speed;
@@ -254,7 +256,7 @@ export function MiniGame() {
         ctx.fillStyle = en.isBoss?'#f97316':'#ef4444'; ctx.fill();
         
         if(Math.hypot(player.x-en.x, player.y-en.y) < player.radius+en.radius) {
-          player.stats.hp -= 0.4; if(player.stats.hp <= 0) setGameOver(true);
+          player.stats.hp -= 0.5; if(player.stats.hp <= 0) setGameOver(true);
         }
         if(en.hp <= 0) {
           if(en.isBoss) {
@@ -262,34 +264,37 @@ export function MiniGame() {
             const types: ('shotgun' | 'laser' | 'pulse')[] = ['shotgun', 'laser', 'pulse'];
             itemsRef.current.push({id: itemIdRef.current++, x: en.x, y: en.y, type: types[Math.floor(Math.random()*3)]});
           }
-          player.xp += en.isBoss ? 50 : 15;
+          player.xp += en.isBoss ? 60 : 20;
           if (player.xp >= player.xpToNext) {
-            player.level++;
-            player.xp -= player.xpToNext;
-            player.xpToNext = Math.floor(player.xpToNext * 1.5);
-            player.stats.atk += 10;
-            player.stats.maxHp += 20;
-            player.stats.hp = player.stats.maxHp;
+            player.level++; player.xp -= player.xpToNext; player.xpToNext = Math.floor(player.xpToNext * 1.6);
+            player.stats.atk += 12; player.stats.maxHp += 25; player.stats.hp = player.stats.maxHp;
           }
           setScore(s => s + (en.isBoss?100:10)); enemiesRef.current.splice(ei, 1);
         }
       });
 
-      // Effects & Player
+      // Pulse FX
       if(player.hasPulse && currentTime - lastPulseRef.current < 600) {
-        ctx.beginPath(); ctx.arc(player.x, player.y, 200 * ((currentTime-lastPulseRef.current)/600), 0, Math.PI*2);
+        ctx.beginPath(); ctx.arc(player.x, player.y, 220 * ((currentTime-lastPulseRef.current)/600), 0, Math.PI*2);
         ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4; ctx.stroke();
       }
+
+      // Player Draw
       ctx.beginPath(); ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
       ctx.fillStyle = '#8b5cf6'; ctx.fill(); 
-      ctx.restore(); 
 
+      // Visual Aiming Crosshair in Game
+      const wMX = mousePosRef.current.x - camX;
+      const wMY = mousePosRef.current.y - camY;
+      ctx.beginPath(); ctx.arc(wMX, wMY, 5, 0, Math.PI*2);
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+      ctx.restore(); 
       animationFrameRef.current = requestAnimationFrame(gameLoop);
     };
 
     animationFrameRef.current = requestAnimationFrame(gameLoop);
     
-    // Listeners
     const hKD = (e: KeyboardEvent) => keysRef.current.add(e.code);
     const hKU = (e: KeyboardEvent) => keysRef.current.delete(e.code);
     const hMM = (e: MouseEvent) => {
@@ -300,16 +305,16 @@ export function MiniGame() {
     window.addEventListener('keydown', hKD);
     window.addEventListener('keyup', hKU);
     canvas.addEventListener('mousemove', hMM);
+    canvas.addEventListener('mousedown', handleShoot);
 
     return () => { 
       cancelAnimationFrame(animationFrameRef.current!); 
       window.removeEventListener('keydown', hKD); 
       window.removeEventListener('keyup', hKU);
       canvas.removeEventListener('mousemove', hMM);
+      canvas.removeEventListener('mousedown', handleShoot);
     };
-  }, [isOpen, isPaused, gameOver, score, spawnEnemy, shootTowardsMouse]);
-
-  const player = playerRef.current;
+  }, [isOpen, isPaused, gameOver, score, handleShoot]);
 
   return (
     <>
@@ -321,58 +326,51 @@ export function MiniGame() {
         {isOpen && (
           <motion.div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4">
             <div className="bg-gray-900 rounded-2xl border border-gray-700 max-w-5xl w-full overflow-hidden shadow-2xl font-mono">
-              {/* Header with Level & Stats */}
               <div className="flex items-center justify-between p-4 border-b border-gray-800 text-white">
                 <div className="flex gap-6 items-center">
                   <h3 className="font-bold text-xl">Survival Arena</h3>
                   <div className="flex flex-col">
-                    <span className="text-xs text-purple-400">LEVEL {player.level}</span>
-                    <div className="w-32 h-2 bg-gray-800 rounded-full mt-1 overflow-hidden">
-                      <div className="h-full bg-purple-500" style={{ width: `${(player.xp / player.xpToNext) * 100}%` }} />
+                    <span className="text-[10px] text-purple-400">LV {playerRef.current.level}</span>
+                    <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-full bg-purple-500" style={{ width: `${(playerRef.current.xp / playerRef.current.xpToNext) * 100}%` }} />
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-red-400">HP {Math.ceil(player.stats.hp)}/{player.stats.maxHp}</span>
-                    <div className="w-32 h-2 bg-gray-800 rounded-full mt-1 overflow-hidden">
-                      <div className="h-full bg-red-500" style={{ width: `${(player.stats.hp / player.stats.maxHp) * 100}%` }} />
+                    <span className="text-[10px] text-red-400">HP {Math.ceil(playerRef.current.stats.hp)}</span>
+                    <div className="w-24 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                      <div className="h-full bg-red-500" style={{ width: `${(playerRef.current.stats.hp / playerRef.current.stats.maxHp) * 100}%` }} />
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-4 items-center">
-                  <div className="flex gap-3">
-                    {player.shotCount > 1 && <Target className="w-5 h-5 text-yellow-500" />}
-                    {player.hasLaser && <Zap className="w-5 h-5 text-red-500" />}
-                    {player.hasPulse && <Disc className="w-5 h-5 text-blue-500" />}
+                  <div className="flex gap-2">
+                    {playerRef.current.shotCount > 1 && <Target className="w-5 h-5 text-yellow-500" />}
+                    {playerRef.current.hasLaser && <Zap className="w-5 h-5 text-red-500" />}
+                    {playerRef.current.hasPulse && <Disc className="w-5 h-5 text-blue-500" />}
                   </div>
                   <button onClick={() => setIsPaused(!isPaused)} className="p-2 hover:bg-gray-800 rounded-lg">
-                    {isPaused ? <Play className="w-6 h-6" /> : <Pause className="w-6 h-6" />}
+                    {isPaused ? <Play /> : <Pause />}
                   </button>
-                  <button onClick={() => setIsOpen(false)} className="hover:bg-gray-800 p-1 rounded"><X className="w-6 h-6"/></button>
+                  <button onClick={() => setIsOpen(false)}><X/></button>
                 </div>
               </div>
 
-              {/* Canvas Area */}
-              <div className="relative bg-black flex justify-center">
-                <canvas ref={canvasRef} width={800} height={600} className="w-full cursor-crosshair" />
-                
+              <div className="relative bg-black flex justify-center cursor-none">
+                <canvas ref={canvasRef} width={800} height={600} className="w-full" />
                 {isPaused && !gameOver && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white">
-                    <h2 className="text-4xl font-bold flex items-center gap-4"><Pause className="w-10 h-10"/> PAUSED</h2>
-                  </div>
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-3xl font-bold">PAUSED</div>
                 )}
-
                 {gameOver && (
                   <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center text-white">
                     <h2 className="text-5xl font-extrabold text-red-600 mb-2">GAME OVER</h2>
-                    <p className="text-xl mb-6">Final Score: {score}</p>
-                    <button onClick={resetGame} className="px-10 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all">TRY AGAIN</button>
+                    <p className="mb-6">Score: {score}</p>
+                    <button onClick={resetGame} className="px-10 py-3 bg-white text-black font-bold rounded-full">TRY AGAIN</button>
                   </div>
                 )}
               </div>
-
-              <div className="p-3 bg-gray-800/50 text-center text-xs text-gray-400">
-                [W,A,S,D] MOVE | MOUSE AIM & AUTO SHOOT | BOSS EVERY 150 PTS | BULLETS COLLIDE WITH WALLS
+              <div className="p-2 bg-gray-800/50 text-center text-[10px] text-gray-500">
+                WASD: MOVE | LEFT CLICK: SHOOT (FAST CLICK = FAST FIRE) | BULLETS BREAK ON WALLS
               </div>
             </div>
           </motion.div>
