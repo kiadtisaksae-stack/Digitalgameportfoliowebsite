@@ -13,7 +13,7 @@ const games = [
     image: Assets.CNW,
     description: 'เกมที่ผมพยายามออกแบบ มาให้ผู้เล่นสามารถเลือก อาชีพ และ การเติบโตได้แบบอิสระ มีระบบ ที่แข็งแรง ที่สุด ที่เคยเขียนมา',
     tech: ['Unity', 'C#'],
-    link: 'https://example.com/chronicles' // ใส่ลิงก์ของเกมที่นี่
+    link: 'https://youtu.be/OhHzfxKZeCE' // ใส่ลิงก์ของเกมที่นี่
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const games = [
     image: Assets.ari,
     description: 'เกม First Person Shooting ที่เราจะได้รับบทเป็น นักเวท ที่ต้องใช้ ทักษะ ในการ คำนวน คณิตศาสตร์ ',
     tech: ['Unity', 'C#'],
-    link: 'https://example.com/arimancer'
+    link: 'https://youtu.be/2Wix8gscmbw?si=GJPps6F8VaAuClq9'
   },
   {
     id: 3,
@@ -40,7 +40,7 @@ const games = [
     image: Assets.dgq,
     description: 'เป็นโปรเจคทำด้วย Effect House เกม ตี้ล่า จอมมาร',
     tech: ['Effect House'],
-    link: 'https://example.com/digiquest'
+    link: 'https://www.canva.com/design/DAG1rmh1LWg/i_5TmzblLCuyHQWL1cyruA/edit'
   },
 ];
 
