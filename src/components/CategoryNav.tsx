@@ -2,9 +2,8 @@ import { motion } from 'motion/react';
 import { Gamepad2, PenTool, Bone, Box, Cpu } from 'lucide-react';
 
 /**
- * 1. ส่วนการประกาศข้อมูล (Data Structure):
- * เก็บข้อมูลหมวดหมู่เป็น Array เพื่อให้นำไปวนลูป (Map) สร้างปุ่มได้ง่าย
- * ช่วยให้การแก้ไขชื่อหมวดหมู่หรือเปลี่ยนไอคอนทำได้จากที่เดียว
+ * ข้อมูลหมวดหมู่ (Data)
+ * ใช้สำหรับวนลูปสร้างปุ่ม เพื่อให้โค้ดเป็นระเบียบและแก้ไขง่าย
  */
 const categories = [
   { id: 'game-projects', label: 'Game Project', icon: Gamepad2, color: 'blue' },
@@ -16,14 +15,13 @@ const categories = [
 
 export function CategoryNav() {
   /**
-   * 2. ส่วนฟังก์ชันการนำทาง (Smooth Scrolling):
-   * คำนวณตำแหน่งของ Element ตาม id ที่ส่งมา
-   * มีการใช้ offset เพื่อหักลบความสูงของแถบเมนู ไม่ให้แถบเมนูไปทับหัวข้อเนื้อหา
+   * ฟังก์ชันเลื่อนหน้าจอ (Smooth Scroll)
+   * คำนวณตำแหน่งและเลื่อนไปยัง Section ที่กำหนดโดยไม่ให้เมนูทับหัวข้อ
    */
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; // ระยะเผื่อด้านบนเพื่อให้หัวข้อไม่โดนเมนูบัง
+      const offset = 80; 
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -38,55 +36,52 @@ export function CategoryNav() {
 
   return (
     /**
-     * 3. โครงสร้างแถบเมนู (Sticky Header):
-     * sticky top-0: ทำให้แถบค้างอยู่ที่ขอบบนสุดเสมอ
-     * z-50: กำหนดให้อยู่เลเยอร์หน้าสุด
-     * bg-black/80 backdrop-blur-lg: ทำพื้นหลังโปร่งแสงและเบลอฉากหลังให้ดูทันสมัย
+     * 1. ส่วนควบคุมแถบเมนู (Sticky Container)
+     * sticky top-0: ค้างที่ขอบบน
+     * z-50: อยู่บนสุด
+     * flex justify-end: "จุดสำคัญ" บังคับให้เนื้อหาภายในทั้งหมดไหลไปทางขวาสุดของจอ
      */
-    <div className="sticky top-0 z-50 py-3 bg-black/80 backdrop-blur-lg border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4">
+    <div className="sticky top-0 z-50 py-3 bg-black/80 backdrop-blur-lg border-b border-white/10 flex justify-end">
+      
+      {/** * 2. ส่วนกำหนดขอบเขต (Wrapper)
+       * w-full: เต็มความกว้าง
+       * px-2 md:px-6: เว้นระยะห่างจากขอบจอขวาเพียงเล็กน้อยเพื่อให้ดูชิดมุมจริงๆ
+       */}
+      <div className="w-full px-2 md:px-6">
         
-        {/**
-         * 4. ส่วนจัดวางตำแหน่ง (Alignment & Responsive):
-         * flex-nowrap: ป้องกันไม่ให้ปุ่มตัดขึ้นบรรทัดใหม่ในมือถือ
-         * justify-end: "หัวใจหลัก" ที่ทำให้ปุ่มทั้งหมดไปชิดมุมบนขวาเสมอ
-         * overflow-x-auto: ช่วยให้ในหน้าจอมือถือ สามารถใช้นิ้วปัดซ้าย-ขวาเพื่อดูเมนูได้
-         * no-scrollbar: ซ่อนแถบเลื่อนที่ดูเกะกะ (ต้องตั้งค่าใน CSS เพิ่มเติม)
+        {/** * 3. ส่วนจัดเรียงปุ่ม (Flex Row)
+         * justify-end: ย้ำอีกครั้งให้ปุ่มเรียงจากขวามาซ้าย
+         * overflow-x-auto: รองรับการปัดซ้าย-ขวาในมือถือ (9:16)
+         * no-scrollbar: ซ่อนแถบเลื่อนที่ดูไม่สวยงาม
          */}
-        <div className="flex flex-nowrap md:flex-wrap justify-end gap-2 md:gap-4 overflow-x-auto no-scrollbar scroll-smooth">
+        <div className="flex flex-nowrap justify-end gap-2 md:gap-3 overflow-x-auto no-scrollbar scroll-smooth">
           
-          {/** * 5. การสร้างปุ่ม (Component Mapping):
-           * วนลูปข้อมูลจาก categories มาสร้างเป็นปุ่ม motion.button 
-           */}
           {categories.map((category, index) => (
             <motion.button
               key={category.id}
-              // Animation ตอนเริ่มต้น: ค่อยๆ เลื่อนขึ้นจากด้านบนและจางปรากฏ
+              // Animation เลื่อนลงมาจากขอบบนตอนโหลดหน้าเว็บ
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }} // ให้ปุ่มค่อยๆ โผล่ทีละปุ่ม
+              transition={{ delay: index * 0.05 }}
               onClick={() => scrollToSection(category.id)}
               
               /**
-               * 6. การกำหนดสไตล์ปุ่ม (Styling):
-               * flex-shrink-0: ป้องกันปุ่มถูกบีบจนเบี้ยวในจอมือถือ
-               * whitespace-nowrap: ป้องกันตัวหนังสือขึ้นบรรทัดใหม่
-               * hover:border...: เปลี่ยนสีขอบและพื้นหลังเมื่อเมาส์ชี้ตามค่า color ใน Array
+               * สไตล์ปุ่ม (Button Styling)
+               * flex-shrink-0: ป้องกันปุ่มเบี้ยวในมือถือ
+               * text-xs / md:text-sm: ปรับขนาดตามหน้าจอให้สมส่วน
+               * whitespace-nowrap: บังคับไม่ให้ข้อความตัดขึ้นบรรทัดใหม่
                */
               className={`
                 group flex items-center gap-2 
-                px-3 py-1.5 md:px-5 md:py-2.5 
+                px-3 py-1.5 md:px-4 md:py-2 
                 rounded-full flex-shrink-0
-                bg-gray-900/50 border border-gray-700 
+                bg-gray-900/40 border border-gray-800 
                 hover:border-purple-500/50 hover:bg-purple-500/10 
                 transition-all duration-300
               `}
             >
-              {/* ไอคอน: ปรับขนาดตามหน้าจอ (เล็กในมือถือ ใหญ่ในคอม) */}
               <category.icon className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
-              
-              {/* ข้อความ: text-xs สำหรับมือถือเพื่อให้ประหยัดพื้นที่ และ md:text-sm สำหรับหน้าจอปกติ */}
-              <span className="text-xs md:text-sm text-gray-300 group-hover:text-purple-400 font-medium transition-colors whitespace-nowrap">
+              <span className="text-[10px] md:text-xs text-gray-300 group-hover:text-purple-400 font-medium transition-colors uppercase tracking-wider">
                 {category.label}
               </span>
             </motion.button>
