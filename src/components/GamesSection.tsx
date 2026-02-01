@@ -29,6 +29,14 @@ const games = [
     description: 'เราจะได้รับบทเป็น นักวิทยาศาสตร์ ที่ต้อง เอาชีวิตรอดจาก เอเลี่ยน',
     tech: ['Unity', 'C#']
   },
+  {
+    id: 4,
+    title: 'Digi Quest',
+    genre: 'Shot Game ',
+    image: Assets.dgq,
+    description: 'เป็นโปรเจคทำด้วย Effect House เกม ตี้ล่า จอมมาร',
+    tech: ['Effect House']
+  },
 ];
 
 export function GamesSection() {
