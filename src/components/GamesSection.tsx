@@ -4,6 +4,7 @@ import { Gamepad2, ExternalLink } from 'lucide-react';
 import Slider from "react-slick";
 // Import Assets images
 import { Assets } from '../images';
+
 const games = [
   {
     id: 1,
@@ -11,7 +12,8 @@ const games = [
     genre: 'RPG RolePlay',
     image: Assets.CNW,
     description: 'เกมที่ผมพยายามออกแบบ มาให้ผู้เล่นสามารถเลือก อาชีพ และ การเติบโตได้แบบอิสระ มีระบบ ที่แข็งแรง ที่สุด ที่เคยเขียนมา',
-    tech: ['Unity', 'C#']
+    tech: ['Unity', 'C#'],
+    link: 'https://example.com/chronicles' // ใส่ลิงก์ของเกมที่นี่
   },
   {
     id: 2,
@@ -19,7 +21,8 @@ const games = [
     genre: 'RPG Adventrue',
     image: Assets.ari,
     description: 'เกม First Person Shooting ที่เราจะได้รับบทเป็น นักเวท ที่ต้องใช้ ทักษะ ในการ คำนวน คณิตศาสตร์ ',
-    tech: ['Unity', 'C#']
+    tech: ['Unity', 'C#'],
+    link: 'https://example.com/arimancer'
   },
   {
     id: 3,
@@ -27,7 +30,8 @@ const games = [
     genre: 'Suvival Roglkie',
     image: Assets.tnte,
     description: 'เราจะได้รับบทเป็น นักวิทยาศาสตร์ ที่ต้อง เอาชีวิตรอดจาก เอเลี่ยน',
-    tech: ['Unity', 'C#']
+    tech: ['Unity', 'C#'],
+    link: 'https://example.com/tnte'
   },
   {
     id: 4,
@@ -35,7 +39,8 @@ const games = [
     genre: 'Shot Game ',
     image: Assets.dgq,
     description: 'เป็นโปรเจคทำด้วย Effect House เกม ตี้ล่า จอมมาร',
-    tech: ['Effect House']
+    tech: ['Effect House'],
+    link: 'https://example.com/digiquest'
   },
 ];
 
@@ -47,14 +52,14 @@ export function GamesSection() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 2500, // ปรับให้ช้าลงเล็กน้อยเพื่อให้คนอ่านทัน
     pauseOnHover: true,
     arrows: false,
     className: "game-slider"
   };
 
   return (
-    <section className="py-20 px-4 bg-gray-900 overflow-hidden">
+    <section id="game-projects" className="py-20 px-4 bg-gray-900 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,10 +113,16 @@ export function GamesSection() {
                       </div>
                     </div>
 
-                    <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors w-fit">
+                    {/* แก้ไขจาก button เป็น <a> เพื่อใช้ลิงก์ภายนอก */}
+                    <a 
+                      href={game.link}
+                      target="_blank" // เปิดแท็บใหม่
+                      rel="noopener noreferrer" // เพื่อความปลอดภัย
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all transform hover:scale-105 w-fit"
+                    >
                       <span>ดูรายละเอียด</span>
                       <ExternalLink className="w-4 h-4" />
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
