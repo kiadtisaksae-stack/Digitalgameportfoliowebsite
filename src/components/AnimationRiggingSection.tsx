@@ -22,11 +22,11 @@ const animations = [
   },
   {
     id: 3,
-    title: 'Creature Locomotion',
+    title: 'Gacha Animation',
     category: 'Creature Animation',
-    image: 'https://images.unsplash.com/photo-1599590984817-0c15f45b64a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbmltYWwlMjBza2VsZXRvbnxlbnwxfHx8fDE3Njk3ODczOTB8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: Assets.gacha,
     description: 'Walk, trot, and gallop cycles for a quadruped creature.',
-    videoUrl: 'https://youtu.be/4XzeA9RNhQ8?si=fAsxBkr5_j4OTwqY'
+    videoUrl: 'https://www.canva.com/design/DAG1Tbt9oJ0/YxuP-kjN-2dCFiLfQCS4ag/edit?utm_content=DAG1Tbt9oJ0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
   }
 ];
 
