@@ -7,19 +7,7 @@ export function Footer() {
       href: 'https://github.com/kiadtisaksae-stack',
       label: 'GitHub',
     },
-    {
-      icon: Linkedin,
-      label: 'LinkedIn',
-    },
-    {
-      icon: Twitter,
-      label: 'Twitter',
-    },
-    {
-      icon: Mail,
-      href: 'nonomxp80@gmail.com',
-      label: 'Email',
-    },
+
   ];
 
   return (
