@@ -16,7 +16,7 @@ const designs = [
   },
   {
     id: 2,
-    title: 'GDD: I'm Just a Merchabt',
+    title: 'GDD: I\'m Just a Merchabt',
     category: 'Game Design',
     image: 'https://images.unsplash.com/photo-1558655146-d09347e0b7a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcmNoaXRlY3R1cmFsJTIwc2tldGNofGVufDF8fHx8MTc2OTc4NzM1MHww&ixlib=rb-4.1.0&q=80&w=1080',
     description: 'เป็นการ Disign Game ให้ออก มาเป็น Game indie ที่ กินสเปคน้อย กระบวนการสร้าง สั้น ',
