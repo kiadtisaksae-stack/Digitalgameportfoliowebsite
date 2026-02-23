@@ -46,7 +46,7 @@ const games = [
     id: 5,
     title: 'Prasath Daek',
     genre: 'Shot Game ',
-    image: Assets.dgq,
+    image: Assets.g,
     description: 'เป็นโปรเจค GameJamThai ครั้งแรก โดยเราจะได้รับบทเป็น พ่อพระ นักพรต ที่เดินทางไปยางปราสาทเก่า ต่างๆ เพื่อปลดปล่อย เหล่า วิญญาน',
     tech: ['Unity', 'C#'],
     link: 'https://youtu.be/b3oecJgiT0U'
