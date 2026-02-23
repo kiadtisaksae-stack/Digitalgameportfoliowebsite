@@ -31,7 +31,7 @@ const games = [
     image: Assets.tnte,
     description: 'เราจะได้รับบทเป็น นักวิทยาศาสตร์ ที่ต้อง เอาชีวิตรอดจาก เอเลี่ยน',
     tech: ['Unity', 'C#'],
-    link: 'https://example.com/tnte'
+    link: 'https://youtu.be/zaRW4BCtcvY'
   },
   {
     id: 4,
