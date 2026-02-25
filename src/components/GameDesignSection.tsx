@@ -24,11 +24,11 @@ const designs = [
   },
   {
     id: 3,
-    title: 'Character Progression',
-    category: 'Economy Design',
-    image: 'https://images.unsplash.com/photo-1553484771-371af2727871?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwYXBlcndvcmt8ZW58MXx8fHwxNzY5Nzg3MzU1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    description: 'ออกแบบ ระบบ เนื้อเรื่อง การให้รางวัล',
-    docLink: 'https://docs.google.com/document/d/your-link-3'
+    title: 'Project Design Game Molten Strike',
+    category: 'Game Design',
+    image: Assets.MS,
+    description: 'ออกแบบ เกมปากัว VR',
+    docLink: 'https://www.canva.com/design/DAHCVAuvbv8/0RIKkahE94iwX3FhKC5pcw/edit?utm_content=DAHCVAuvbv8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
   },
   {
     id: 4,
