@@ -1,4 +1,5 @@
 import { Hero } from './components/Hero';
+import { SkillVideoSection } from './components/SkillVideoSection'; // import เข้ามา
 import { CategoryNav } from './components/CategoryNav';
 import { ModelsSection } from './components/ModelsSection';
 import { GamesSection } from './components/GamesSection';
@@ -25,6 +26,7 @@ export default function App() {
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
       />
       <Hero />
+      <SkillVideoSection />
       <CategoryNav />
       
       <div id="game-projects">
