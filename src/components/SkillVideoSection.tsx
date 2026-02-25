@@ -1,14 +1,28 @@
 import { motion } from 'framer-motion';
-import { PlayCircle, Trophy, TrendingUp } from 'lucide-react';
+import { PlayCircle, Trophy, TrendingUp, Gamepad2, Box } from 'lucide-react';
+
+/**
+ * 1. ส่วนการจัดการ Asset (Configuration):
+ * ปรับแก้ Path ไฟล์ของคุณได้ที่นี่ที่เดียว
+ * แนะนำ: ไฟล์วิดีโอขนาดใหญ่ควรอยู่ใน public/ เพื่อประสิทธิภาพในการ Build
+ */
+const SKILL_VIDEO_DATA = {
+  videoSrc: "/videos/skill-progression.mp4", // Path จากโฟลเดอร์ public
+  posterImg: "/images/video-thumbnail.jpg",  // รูป Preview ก่อนกดเล่น
+  title: "Skill Showcase & Growth",
+  subTitle: "SKILL EVOLUTION",
+  description: "รวบรวมฟุตเทจการพัฒนาทักษะ ตั้งแต่การเขียนโค้ดเริ่มต้น จนถึงโปรเจกต์ที่ซับซ้อนในปัจจุบัน (ความยาว 5 นาที)"
+};
 
 export function SkillVideoSection() {
   return (
     <section className="py-20 px-4 bg-black relative overflow-hidden">
-      {/* เอฟเฟกต์แสงพื้นหลังเพื่อให้ดูมีมิติ */}
+      {/* เอฟเฟกต์แสง Background (Glow Effect) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/10 blur-[120px] rounded-full" />
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* หัวข้อส่วน */}
+        
+        {/* --- ส่วนหัวข้อ (Header Section) --- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -18,15 +32,15 @@ export function SkillVideoSection() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full mb-4">
             <TrendingUp className="w-5 h-5 text-purple-400" />
-            <span className="text-purple-400 font-mono text-sm">SKILL EVOLUTION</span>
+            <span className="text-purple-400 font-mono text-sm">{SKILL_VIDEO_DATA.subTitle}</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Skill Showcase & Growth</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">{SKILL_VIDEO_DATA.title}</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            รวบรวมฟุตเทจการพัฒนาทักษะ ตั้งแต่การเขียนโค้ดเริ่มต้น จนถึงโปรเจกต์ที่ซับซ้อนในปัจจุบัน (ความยาว 5 นาที)
+            {SKILL_VIDEO_DATA.description}
           </p>
         </motion.div>
 
-        {/* ส่วนวิดีโอ (Video Player Container) */}
+        {/* --- ส่วนเครื่องเล่นวิดีโอ (Video Player) --- */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -34,20 +48,16 @@ export function SkillVideoSection() {
           viewport={{ once: true }}
           className="relative group aspect-video w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-gray-900"
         >
-          {/* จุดสำคัญ: 
-              ให้นำไฟล์วิดีโอของคุณไปวางไว้ในโฟลเดอร์ public/videos/ 
-              แล้วเรียกใช้ผ่าน path "/videos/your-skill-video.mp4" 
-          */}
           <video 
             controls 
             className="w-full h-full object-cover"
-            poster="/images/video-thumbnail.jpg" // รูปหน้าปกวิดีโอ
+            poster={SKILL_VIDEO_DATA.posterImg} // ดึงจากตัวแปร Asset
           >
-            <source src="/videos/skill-progression.mp4" type="video/mp4" />
+            <source src={SKILL_VIDEO_DATA.videoSrc} type="video/mp4" /> {/* ดึงจากตัวแปร Asset */}
             Your browser does not support the video tag.
           </video>
 
-          {/* Overlay สำหรับตกแต่งเบื้องต้น (จะหายไปเมื่อกดเล่น) */}
+          {/* Hover Overlay: แสดงปุ่ม Play สวยๆ เมื่อเอาเมาส์มาวาง */}
           <div className="absolute inset-0 pointer-events-none group-hover:bg-black/20 transition-all duration-500 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
               <div className="p-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -57,7 +67,7 @@ export function SkillVideoSection() {
           </div>
         </motion.div>
 
-        {/* ส่วนคำอธิบายใต้คลิป (Mini Stats) */}
+        {/* --- ส่วนข้อมูลสถิติ (Mini Stats Grid) --- */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           {[
             { icon: Gamepad2, label: 'Game Mechanics', value: '2023 - Present' },
