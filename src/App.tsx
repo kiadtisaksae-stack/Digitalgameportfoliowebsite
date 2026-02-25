@@ -25,9 +25,9 @@ export default function App() {
         type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
       />
+      <CategoryNav />
       <Hero />
       <SkillVideoSection />
-      <CategoryNav />
       
       <div id="game-projects">
         <GamesSection />
