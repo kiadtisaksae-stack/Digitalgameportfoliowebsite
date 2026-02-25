@@ -11,7 +11,7 @@ const games = [
     title: 'Chronicles of the New World',
     genre: 'RPG RolePlay',
     image: Assets.CNW,
-    description: 'เกมที่ผมพยายามออกแบบ มาให้ผู้เล่นสามารถเลือก อาชีพ และ การเติบโตได้แบบอิสระ มีระบบ ที่แข็งแรง ที่สุด ที่เคยเขียนมา',
+    description: 'โปรเจคทำเอง SoloDev เป็นเกมที่ผมพยายามออกแบบ มาให้ผู้เล่นสามารถเลือก อาชีพ และ การเติบโตได้แบบอิสระ มีระบบ ที่แข็งแรง ที่สุด ที่เคยเขียนมา',
     tech: ['Unity', 'C#'],
     link: 'https://youtu.be/OhHzfxKZeCE' // ใส่ลิงก์ของเกมที่นี่
   },
@@ -50,6 +50,24 @@ const games = [
     description: 'เป็นโปรเจค GameJamThai ครั้งแรก โดยเราจะได้รับบทเป็น พ่อพระ นักพรต ที่เดินทางไปยางปราสาทเก่า ต่างๆ เพื่อปลดปล่อย เหล่า วิญญาน',
     tech: ['Unity', 'C#'],
     link: 'https://youtu.be/b3oecJgiT0U'
+  },
+  {
+    id: 6,
+    title: 'Im Just a Merchant',
+    genre: 'Indie Game',
+    image: Assets.IMM,
+    description: 'โปรเจค SoloDev เกิดใหม่เป็นพ่อค้า ในโลก fantasy ออกแบบมาให้เน้นการซื้อขาย เน้นระบบ Econamy และมี อุปสรรคเป็น เหล่าโจร หรือ มอนสเตอร์ ที่รอดัก เวลาเดินทาง',
+    tech: ['DOTWEEN','Unity', 'C#'],
+    link: 'https://youtube.com'
+  },
+  {
+    id: 7,
+    title: 'Digiball Advandture',
+    genre: '2D Game',
+    image: Assets.DGB,
+    description: 'โปรเจค SoloDev ในรายวิชา ปี2 เทอม 1 โดยเป็นเกมบังคับลูกบอลง่ายๆ จุดเด่นโปรเจคนี้คือ Evironment 90 เปอร์เซนต์ ทำเอง',
+    tech: ['Unity', 'C#'],
+    link: 'https://youtu.be/eXx5LwjrMs0'
   },
 ];
 
