@@ -27,7 +27,7 @@ export default function App() {
       />
       <CategoryNav />
       <Hero />
-      <SkillVideoSection />
+      // <SkillVideoSection />
       
       <div id="game-projects">
         <GamesSection />
