@@ -1,12 +1,9 @@
 import { motion } from 'framer-motion';
 import { Trophy, TrendingUp, Gamepad2, Box } from 'lucide-react';
 
-/**
- * 1. ตั้งค่า Video ID:
- * นำ ID จาก Link YouTube มาใส่ตรงนี้ (เช่น https://www.youtube.com/watch?v=dQw4w9WgXcQ -> ID คือ dQw4w9WgXcQ)
- */
 const SKILL_VIDEO_CONFIG = {
-  youtubeId: "https://youtu.be/RZeI-LqkOvU", 
+  // แก้ไข: ใส่เฉพาะ ID 11 หลักหลังเครื่องหมาย / 
+  youtubeId: "RZeI-LqkOvU", 
   title: "Skill Showcase & Growth",
   subTitle: "SKILL EVOLUTION",
   description: "รวบรวมฟุตเทจการพัฒนาทักษะ ตั้งแต่การเขียนโค้ดเริ่มต้น จนถึงโปรเจกต์ที่ซับซ้อนในปัจจุบัน (ความยาว 5 นาที)"
@@ -32,11 +29,12 @@ export function SkillVideoSection() {
             <TrendingUp className="w-5 h-5 text-purple-400" />
             <span className="text-purple-400 font-mono text-sm">{SKILL_VIDEO_CONFIG.subTitle}</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">{SKILL_VIDEO_DATA.title}</h2>
+          {/* แก้ไขจาก SKILL_VIDEO_DATA เป็น SKILL_VIDEO_CONFIG */}
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">{SKILL_VIDEO_CONFIG.title}</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">{SKILL_VIDEO_CONFIG.description}</p>
         </motion.div>
 
-        {/* --- ส่วน YouTube Embed (เครื่องเล่นวิดีโอ) --- */}
+        {/* --- ส่วน YouTube Embed --- */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -46,7 +44,7 @@ export function SkillVideoSection() {
         >
           <iframe
             className="absolute inset-0 w-full h-full"
-            src={`https://www.youtube.com/embed/${SKILL_VIDEO_CONFIG.youtubeId}?rel=0&modestbranding=1&autoplay=0`}
+            src={`https://www.youtube.com/embed/${SKILL_VIDEO_CONFIG.youtubeId}?rel=0&modestbranding=1`}
             title="YouTube Video Player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
