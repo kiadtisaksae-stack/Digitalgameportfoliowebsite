@@ -20,7 +20,7 @@ export function ContactMenu() {
       id: 'facebook',
       icon: Facebook,
       label: 'Facebook',
-      value: 'My Facebook Profile',
+      value: 'Kiadtisak Xab Saesong',
       link: 'https://www.facebook.com/share/1DWsRzefku/?mibextid=wwXIfr',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
@@ -30,7 +30,7 @@ export function ContactMenu() {
       id: 'instagram',
       icon: Instagram,
       label: 'Instagram',
-      value: '@my_portfolio',
+      value: 'XANXAN_33',
       link: 'https://www.instagram.com/black_ark47?igsh=OWlncDdnOHhndTU1&utm_source=qr',
       color: 'text-pink-400',
       bgColor: 'bg-pink-500/10',
@@ -40,8 +40,8 @@ export function ContactMenu() {
       id: 'line',
       icon: MessageCircle,
       label: 'Line',
-      value: 'ID: my_line_id',
-      link: null, // No link for Line as requested
+      value: 'ID:count1111',
+      link: 'https://line.me/ti/p/S3kZf2envL',
       color: 'text-green-400',
       bgColor: 'bg-green-500/10',
       borderColor: 'border-green-500/20'
