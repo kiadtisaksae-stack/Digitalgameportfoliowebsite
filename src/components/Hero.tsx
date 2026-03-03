@@ -33,8 +33,16 @@ export function Hero() {
             3D Models • Game Design • Digital Art
           </p>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            สร้างสรรค์ประสบการณ์เกมที่น่าประทับใจด้วยศิลปะดิจิตอลและเทคโนโลยี
+            สร้างสรรค์ประสบการณ์เกมที่น่าประทับใจด้วยศิลปะดิจิตอลและเทคโนโลย
           </p>
+        <div className="text-sm md:text-base font-mono max-w-3xl mx-auto space-y-2 opacity-90">
+          <p className="text-purple-300">
+            • Unity Development: Optimization, Cross-platform & Multiplayer (Relay/Lobby)
+          </p>
+          <p className="text-blue-300">
+            • 3D Workflow: Modeling & Retopology (Maya/Blender), Character Rigging
+          </p>
+        </div>
         </motion.div>
 
         {/* ปุ่มลูกศรเดิม ไม่ต้องลบครับ เอาไว้เป็น Visual Guide */}
