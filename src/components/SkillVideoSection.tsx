@@ -54,9 +54,9 @@ export function SkillVideoSection() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
           {[
-            { icon: Gamepad2, label: 'Game Mechanics', value: '2023 - Present' },
-            { icon: Box, label: '3D Evolution', value: 'Level 1 to Advanced' },
-            { icon: Trophy, label: 'Major Milestones', value: '10+ Big Updates' },
+            { icon: Gamepad2, label: 'Game', value: 'ทำมาแล้ว 8 เกม' },
+            { icon: Box, label: 'System', value: '15++  System' },
+            { icon: Trophy, label: 'Platform', value: 'Mobile-PC' },
           ].map((item, i) => (
             <motion.div
               key={i}
