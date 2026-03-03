@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Facebook, Instagram, MessageCircle, User, X,GitHub } from 'lucide-react';
+import { Mail, Facebook, Instagram, MessageCircle, User, X, GitHub } from 'lucide-react';
 
 export function ContactMenu() {
   const [isOpen, setIsOpen] = useState(false);
