@@ -7,16 +7,20 @@ export function Hero() {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section 
+      onClick={scrollToContent} // เพิ่มตรงนี้: คลิกตรงไหนก็เลื่อน
+      className="relative h-screen flex items-center justify-center overflow-hidden cursor-pointer" // เพิ่ม cursor-pointer เพื่อให้คนรู้ว่าคลิกได้
+    >
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20" />
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-blue-900/20 pointer-events-none" />
       
       {/* Animated grid background */}
-      <div className="absolute inset-0 opacity-20">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="h-full w-full bg-[linear-gradient(to_right,#4f4f4f_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+      <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pointer-events-none">
+        {/* ใช้ pointer-events-none ใน div ลูก เพื่อให้การคลิกทะลุไปถึงตัว section หลัก */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,43 +37,30 @@ export function Hero() {
           </p>
         </motion.div>
 
-        <motion.button
-          onClick={scrollToContent}
+        {/* ปุ่มลูกศรเดิม ไม่ต้องลบครับ เอาไว้เป็น Visual Guide */}
+        <motion.div
           className="absolute bottom-12 left-1/2 -translate-x-1/2"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <ChevronDown className="w-8 h-8 text-purple-400 animate-bounce" />
-        </motion.button>
+        </motion.div>
       </div>
 
       {/* Decorative elements */}
-      <motion.div
-        className="absolute top-20 left-20 w-72 h-72 bg-purple-600/30 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-20 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1
-        }}
-      />
+      <div className="pointer-events-none"> {/* ป้องกันไม่ให้ element ตกแต่งขวางการคลิก */}
+        <motion.div
+          className="absolute top-20 left-20 w-72 h-72 bg-purple-600/30 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+      </div>
     </section>
   );
 }
