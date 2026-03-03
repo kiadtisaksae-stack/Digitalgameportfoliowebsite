@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Facebook, Instagram, MessageCircle, User, X, GitHub } from 'lucide-react';
+import { Mail, Facebook, Instagram, MessageCircle, User, X, Github } from 'lucide-react';
 
 export function ContactMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,13 +48,13 @@ export function ContactMenu() {
     },
     {
       id: 'GitHub',
-      icon: GitHub,
+      icon: Github,
       label: 'GitHub',
       value: 'kiadtisaksae-stack',
       link: 'https://github.com/kiadtisaksae-stack',
-      color: 'text-red-400',
-      bgColor: 'bg-red-500/10',
-      borderColor: 'border-red-500/20'
+      color: 'text- slate-400',
+      bgColor: 'bg-slate-500/10',
+      borderColor: 'border-slate-500/20'
     }
   ];
 
