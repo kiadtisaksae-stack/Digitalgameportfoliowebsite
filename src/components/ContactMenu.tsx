@@ -45,6 +45,16 @@ export function ContactMenu() {
       color: 'text-green-400',
       bgColor: 'bg-green-500/10',
       borderColor: 'border-green-500/20'
+    },
+    {
+      id: 'GitHub',
+      icon: GitHub,
+      label: 'GitHub',
+      value: 'kiadtisaksae-stack',
+      link: 'https://github.com/kiadtisaksae-stack',
+      color: 'text-purple-400',
+      bgColor: 'bg-purole-500/10',
+      borderColor: 'border-purple-500/20'
     }
   ];
 
