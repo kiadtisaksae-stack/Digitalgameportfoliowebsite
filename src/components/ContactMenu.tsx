@@ -52,9 +52,9 @@ export function ContactMenu() {
       label: 'GitHub',
       value: 'kiadtisaksae-stack',
       link: 'https://github.com/kiadtisaksae-stack',
-      color: 'text-purple-400',
-      bgColor: 'bg-purole-500/10',
-      borderColor: 'border-purple-500/20'
+      color: 'text-red-400',
+      bgColor: 'bg-red-500/10',
+      borderColor: 'border-red-500/20'
     }
   ];
 
