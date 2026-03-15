@@ -10,7 +10,7 @@ const models = [
     category: '3D Character',
     image: Assets.fe,
     description: 'Very Low-poly character model สาวชุดแต่งงาน และ Maid',
-    url: 'https://sketchfab.com/'
+    url: 'https://youtu.be/h56Cx6pRGDA'
   },
   {
     id: 2,
@@ -18,23 +18,21 @@ const models = [
     category: '3D Environment',
     image: Assets.treem,
     description: 'Stylized environment props and assets',
-    url: 'https://sketchfab.com/'
+    url: 'https://youtu.be/HfnD1xHd6A0'
   },
   {
     id: 3,
     title: 'Weapon Sword',
     category: '3D Props',
     image: Assets.sw,
-    description: 'High-detail Sword models with PBR textures',
-    url: 'https://sketchfab.com/'
+    description: 'High-detail Sword models with PBR textures'
   },
   {
     id: 4,
     title: 'Evironment Model',
     category: '3D Environment',
     image: Assets.eviron,
-    description: 'Shop Fantasy Weapon',
-    url: 'https://sketchfab.com/'
+    description: 'Shop Fantasy Weapon'
   },
 ];
 
