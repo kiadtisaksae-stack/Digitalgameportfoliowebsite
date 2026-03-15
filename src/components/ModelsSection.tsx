@@ -8,7 +8,7 @@ const models = [
     id: 1,
     title: 'Character Model',
     category: '3D Character',
-    image: Assets.fe,
+    image: Assets.mino,
     description: 'Very Low-poly character model สาวชุดแต่งงาน และ Maid',
     url: 'https://youtu.be/h56Cx6pRGDA'
   },
