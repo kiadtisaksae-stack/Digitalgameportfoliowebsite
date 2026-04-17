@@ -22,7 +22,7 @@ const VIDEOS = [
   },
   {
     id: "8RhEJzvzqGs", 
-    title: "Unity NGO Multiplayer System",
+    title: "Game Kaika Adventure",
     tag: "NETCODE / MULTIPLAYER",
     description: "Game Kaika กับระบบ Multiplayer ง่ายๆ ไม่ป้องกัน การโกง เน้น ไว"
   },
