@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trophy, TrendingUp, Gamepad2, Box, Server, Globe } from 'lucide-react';
+import { Trophy, TrendingUp, Gamepad2, Box, Server } from 'lucide-react';
 
 const VIDEOS = [
   {
@@ -12,25 +12,25 @@ const VIDEOS = [
     id: "vVElatLWMCM",
     title: "Project Dungeon11",
     tag: "Netcode / Co-op Multiplayer / Custom Editor",
-    description: "โปรเจคนี้ ออกแบบ โดยพยายาม ใช้ Design pattern เป็นเกมที่ออกแบบมาเพื่อให้ Scle ได้ง่าย คนไม่รู้โค้ดด้านใน สามารถ แก้ไข Data ผ่าน Editor ได้  "
+    description: "โปรเจคนี้ ออกแบบ โดยพยายาม ใช้ Design pattern เป็นเกมที่ออกแบบมาเพื่อให้ Scale ได้ง่าย คนไม่รู้โค้ดด้านใน สามารถ แก้ไข Data ผ่าน Editor ได้"
   },
   {
     id: "8fY7gtjeNcI", 
-    title: " Unity NGO Multiplayer System Lobby Relay",
+    title: "Unity NGO Multiplayer System Lobby Relay",
     tag: "NETCODE / MULTIPLAYER",
-    description: "ทอลองระบบ multiplayer"
+    description: "ทดลองระบบ multiplayer"
   },
   {
     id: "8RhEJzvzqGs", 
     title: "Game Kaika Adventure",
     tag: "NETCODE / MULTIPLAYER",
-    description: "Game Kaika กับระบบ Multiplayer ง่ายๆ ไม่ป้องกัน การโกง เน้น ไว"
+    description: "Game Kaika กับระบบ Multiplayer ง่ายๆ เน้นความรวดเร็วในการพัฒนา"
   },
   {
     id: "ClG9eZZm4Lo", 
-    title: "Full Game Pumkin Rush Hotel",
+    title: "Full Game Pumpkin Rush Hotel",
     tag: "Unity / C#",
-    description: "โปรเจคเกม mini tesis โดยได้รับหน้าที่เป็น dev ระบบโดดเด่น ที่ทำคือ ทำระบบ elevator state machine + การจัดการ Queue "
+    description: "โปรเจคเกม Mini Thesis: พัฒนาระบบ Elevator State Machine และ Queue Management"
   }
 ];
 
@@ -60,17 +60,27 @@ export function SkillVideoSection() {
           </p>
         </motion.div>
 
-        {/* --- ส่วน Video Grid (2 คอลัมน์) --- */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        {/* --- Video Grid (2 Columns) --- */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
           {VIDEOS.map((video, index) => (
             <motion.div
               key={video.id}
-              initial={{ opacity: 0, x: index === 0 ? -20 : 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="space-y-4"
+              className="flex flex-col items-center text-center space-y-6"
             >
+              {/* Text Info - Moved to Top */}
+              <div className="max-w-md">
+                <span className="text-[10px] font-mono tracking-widest text-purple-400 bg-purple-400/10 px-3 py-1 rounded-full uppercase">
+                  {video.tag}
+                </span>
+                <h3 className="text-2xl font-bold text-white mt-3 mb-2">{video.title}</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">{video.description}</p>
+              </div>
+
+              {/* Video Container */}
               <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-gray-900 group">
                 <iframe
                   className="absolute inset-0 w-full h-full"
@@ -79,13 +89,6 @@ export function SkillVideoSection() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 ></iframe>
-              </div>
-              <div className="px-2">
-                <span className="text-xs font-mono text-purple-400 bg-purple-400/10 px-2 py-1 rounded-md">
-                  {video.tag}
-                </span>
-                <h3 className="text-xl font-bold text-white mt-2">{video.title}</h3>
-                <p className="text-sm text-gray-500 mt-1">{video.description}</p>
               </div>
             </motion.div>
           ))}
