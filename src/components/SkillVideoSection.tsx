@@ -31,6 +31,12 @@ const VIDEOS = [
     title: "Unity Lobby Relay",
     tag: "NETCODE / MULTIPLAYER",
     description: "ทดสอบระบบ Lobby+Relay"
+  },
+  {
+    id: "ClG9eZZm4Lo", 
+    title: "Full Game Pumkin Rush Hotel",
+    tag: "Unity / C#",
+    description: "โปรเจคเกม mini tesis โดยได้รับหน้าที่เป็น dev ระบบโดดเด่น ที่ทำคือ ทำระบบ elevator state machine + การจัดการ Queue "
   }
 ];
 
