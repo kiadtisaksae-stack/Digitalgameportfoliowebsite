@@ -16,7 +16,7 @@ const VIDEOS = [
   },
   {
     id: "8fY7gtjeNcI", 
-    title: " Unity NGO Multiplayer System",
+    title: " Unity NGO Multiplayer System Lobby Relay",
     tag: "NETCODE / MULTIPLAYER",
     description: "ทอลองระบบ multiplayer"
   },
@@ -25,12 +25,6 @@ const VIDEOS = [
     title: "Game Kaika Adventure",
     tag: "NETCODE / MULTIPLAYER",
     description: "Game Kaika กับระบบ Multiplayer ง่ายๆ ไม่ป้องกัน การโกง เน้น ไว"
-  },
-  {
-    id: "g7zxxZnsxXo", 
-    title: "Unity Lobby Relay",
-    tag: "NETCODE / MULTIPLAYER",
-    description: "ทดสอบระบบ Lobby+Relay"
   },
   {
     id: "ClG9eZZm4Lo", 
