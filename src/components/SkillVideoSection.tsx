@@ -31,6 +31,12 @@ const VIDEOS = [
     title: "Full Game Pumpkin Rush Hotel",
     tag: "Unity / C#",
     description: "โปรเจคเกม Mini Thesis: พัฒนาระบบ Elevator State Machine และ Queue Management"
+  },
+  {
+    id: "iuyYuiSdEMA", 
+    title: "Custom Editor",
+    tag: "Unity / C#",
+    description: "โปรเจคเกม Dungeon 11 ที่มีการเขียนโค้ด ให้ มีการ setup และการตั้งค่า ข้อมูล เช่น skill item enemy prefab ผ่าน custom editor เพื่อให้ง่ายต่อการใช้งาน"
   }
 ];
 
