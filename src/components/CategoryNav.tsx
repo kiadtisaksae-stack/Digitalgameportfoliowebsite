@@ -68,6 +68,7 @@ export function CategoryNav() {
           icon: 'group-hover:text-blue-400',
           text: 'group-hover:text-blue-400'
         };
+
       case 'purple':
         return {
           hoverBorder: 'hover:border-purple-500/50',
@@ -75,6 +76,7 @@ export function CategoryNav() {
           icon: 'group-hover:text-purple-400',
           text: 'group-hover:text-purple-400'
         };
+
       case 'indigo':
         return {
           hoverBorder: 'hover:border-indigo-500/50',
@@ -82,6 +84,7 @@ export function CategoryNav() {
           icon: 'group-hover:text-indigo-400',
           text: 'group-hover:text-indigo-400'
         };
+
       case 'violet':
         return {
           hoverBorder: 'hover:border-violet-500/50',
@@ -89,6 +92,7 @@ export function CategoryNav() {
           icon: 'group-hover:text-violet-400',
           text: 'group-hover:text-violet-400'
         };
+
       case 'cyan':
         return {
           hoverBorder: 'hover:border-cyan-500/50',
@@ -96,6 +100,7 @@ export function CategoryNav() {
           icon: 'group-hover:text-cyan-400',
           text: 'group-hover:text-cyan-400'
         };
+
       default:
         return {
           hoverBorder: 'hover:border-gray-500/50',
@@ -106,12 +111,11 @@ export function CategoryNav() {
     }
   };
 
-    return (
+  return (
     <div className="sticky top-0 z-50 py-6 bg-black/80 backdrop-blur-lg border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex flex-wrap justify-center gap-4">
-
-          {/* My Portfolio Button */}
+          {/* My Portfolio Button - อยู่หน้าสุด */}
           <motion.button
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{
@@ -119,14 +123,14 @@ export function CategoryNav() {
               y: 0,
               scale: 1,
               boxShadow: [
-                '0 0 20px rgba(168, 85, 247, 0.35)',
-                '0 0 35px rgba(34, 211, 238, 0.45)',
-                '0 0 20px rgba(16, 185, 129, 0.35)'
+                '0 0 18px rgba(168, 85, 247, 0.35)',
+                '0 0 32px rgba(34, 211, 238, 0.45)',
+                '0 0 22px rgba(16, 185, 129, 0.4)'
               ]
             }}
             transition={{
               delay: 0,
-              duration: 0.5,
+              duration: 0.45,
               boxShadow: {
                 duration: 2,
                 repeat: Infinity,
@@ -143,13 +147,15 @@ export function CategoryNav() {
               relative group overflow-hidden
               flex items-center gap-2 px-8 py-3 rounded-full
               bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-400
-              text-white font-bold
+              text-white font-bold tracking-wide
               border border-cyan-300/60
               shadow-lg shadow-cyan-500/30
               hover:shadow-emerald-400/50
+              hover:brightness-110
               transition-all duration-300
             "
           >
+            {/* แสงวิ่งผ่านปุ่ม */}
             <span
               className="
                 absolute inset-0 -translate-x-full
@@ -159,10 +165,11 @@ export function CategoryNav() {
               "
             />
 
+            {/* Glow ด้านในปุ่ม */}
             <span
               className="
                 absolute inset-0 rounded-full
-                bg-gradient-to-r from-purple-500/30 via-cyan-400/30 to-emerald-400/30
+                bg-gradient-to-r from-purple-500/25 via-cyan-400/25 to-emerald-400/25
                 blur-md opacity-70
                 group-hover:opacity-100
                 transition-opacity duration-300
@@ -177,7 +184,7 @@ export function CategoryNav() {
               "
             />
 
-            <span className="relative z-10 tracking-wide">
+            <span className="relative z-10">
               My Portfolio
             </span>
           </motion.button>
@@ -222,7 +229,5 @@ export function CategoryNav() {
         </div>
       </div>
     </div>
-  );
-}
   );
 }
