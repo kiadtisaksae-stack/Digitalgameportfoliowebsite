@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Gamepad2, PenTool, Bone, Box, Cpu, FileText } from 'lucide-react';
 
 // แก้ชื่อไฟล์ PDF ตรงนี้ได้เลย
-import portfolioPdf from '../assets/my-portfolio.pdf';
+import portfolioPdf from '../assets/Portfolio.pdf';
 
 const categories = [
   {
