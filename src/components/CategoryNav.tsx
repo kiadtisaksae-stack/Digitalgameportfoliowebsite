@@ -107,70 +107,123 @@ export function CategoryNav() {
   };
 
   return (
-    <div className="sticky top-0 z-50 py-6 bg-black/80 backdrop-blur-lg border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex flex-wrap justify-center gap-4">
-          {categories.map((category, index) => {
-            const colorClasses = getColorClasses(category.color);
+  <div className="sticky top-0 z-50 py-6 bg-black/80 backdrop-blur-lg border-b border-white/10">
+    <div className="max-w-7xl mx-auto px-4">
+      <div className="flex flex-wrap justify-center gap-4">
 
-            return (
-              <motion.button
-                key={category.id}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => scrollToSection(category.id)}
+        {/* My Portfolio Button - อยู่ด้านหน้าสุด */}
+        <motion.button
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            boxShadow: [
+              '0 0 20px rgba(168, 85, 247, 0.35)',
+              '0 0 35px rgba(34, 211, 238, 0.45)',
+              '0 0 20px rgba(16, 185, 129, 0.35)'
+            ]
+          }}
+          transition={{
+            delay: 0,
+            duration: 0.5,
+            boxShadow: {
+              duration: 2,
+              repeat: Infinity,
+              repeatType: 'reverse'
+            }
+          }}
+          whileHover={{
+            scale: 1.1,
+            y: -3
+          }}
+          whileTap={{ scale: 0.96 }}
+          onClick={openPortfolioPdf}
+          className="
+            relative group overflow-hidden
+            flex items-center gap-2 px-8 py-3 rounded-full
+            bg-gradient-to-r from-purple-600 via-cyan-500 to-emerald-400
+            text-white font-bold
+            border border-cyan-300/60
+            shadow-lg shadow-cyan-500/30
+            hover:shadow-emerald-400/50
+            transition-all duration-300
+          "
+        >
+          {/* แสงวิ่งผ่านปุ่ม */}
+          <span
+            className="
+              absolute inset-0 -translate-x-full
+              bg-gradient-to-r from-transparent via-white/35 to-transparent
+              group-hover:translate-x-full
+              transition-transform duration-700
+            "
+          />
+
+          {/* วง glow ด้านหลัง */}
+          <span
+            className="
+              absolute inset-0 rounded-full
+              bg-gradient-to-r from-purple-500/30 via-cyan-400/30 to-emerald-400/30
+              blur-md opacity-70
+              group-hover:opacity-100
+              transition-opacity duration-300
+            "
+          />
+
+          <FileText
+            className="
+              relative z-10 w-5 h-5 text-white
+              group-hover:rotate-12 group-hover:scale-110
+              transition-transform duration-300
+            "
+          />
+
+          <span className="relative z-10 tracking-wide">
+            My Portfolio
+          </span>
+        </motion.button>
+
+        {categories.map((category, index) => {
+          const colorClasses = getColorClasses(category.color);
+
+          return (
+            <motion.button
+              key={category.id}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: (index + 1) * 0.1 }}
+              onClick={() => scrollToSection(category.id)}
+              className={`
+                group flex items-center gap-2 px-6 py-3 rounded-full
+                bg-gray-900 border border-gray-700
+                ${colorClasses.hoverBorder} ${colorClasses.hoverBg}
+                transition-all duration-300
+              `}
+            >
+              <category.icon
                 className={`
-                  group flex items-center gap-2 px-6 py-3 rounded-full
-                  bg-gray-900 border border-gray-700
-                  ${colorClasses.hoverBorder} ${colorClasses.hoverBg}
-                  transition-all duration-300
+                  w-5 h-5 text-gray-400
+                  ${colorClasses.icon}
+                  transition-colors
+                `}
+              />
+
+              <span
+                className={`
+                  text-gray-300
+                  ${colorClasses.text}
+                  font-medium transition-colors
                 `}
               >
-                <category.icon
-                  className={`
-                    w-5 h-5 text-gray-400
-                    ${colorClasses.icon}
-                    transition-colors
-                  `}
-                />
-
-                <span
-                  className={`
-                    text-gray-300
-                    ${colorClasses.text}
-                    font-medium transition-colors
-                  `}
-                >
-                  {category.label}
-                </span>
-              </motion.button>
-            );
-          })}
-
-          <motion.button
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: categories.length * 0.1 }}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.96 }}
-            onClick={openPortfolioPdf}
-            className="
-              group flex items-center gap-2 px-7 py-3 rounded-full
-              bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500
-              text-white font-semibold
-              border border-white/30
-              shadow-lg shadow-purple-500/30
-              hover:shadow-cyan-500/40
-              hover:brightness-110
-              transition-all duration-300
-            "
-          >
-            <FileText className="w-5 h-5 text-white group-hover:rotate-6 transition-transform" />
-            <span>My Portfolio</span>
-          </motion.button>
-        </div>
+                {category.label}
+              </span>
+            </motion.button>
+          );
+        })}
       </div>
     </div>
+  </div>
+);
   );
 }
